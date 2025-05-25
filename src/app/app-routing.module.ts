@@ -8,15 +8,17 @@ import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { BoardUserComponent } from './board-user/board-user.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 const routes: Routes = [
+  { path: 'home', component: HomepageComponent },
   { path: 'explore', component: HomeComponent },
   { path: 'auth', component: AuthComponent, canActivate:[antiAuthGuard]},
   { path: 'profile', component: ProfileComponent, canActivate:[authGuard]},
   { path: 'conversations', component: BoardUserComponent, canActivate:[authGuard]},
   { path: 'conversation/:id', component: BoardUserComponent, canActivate:[authGuard] },
   { path: 'admin', component: BoardAdminComponent, canActivate:[authGuard, adminGuard]},
-  { path: '', redirectTo: 'explore', pathMatch: 'full' }
+  { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({

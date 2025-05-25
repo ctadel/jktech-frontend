@@ -13,6 +13,7 @@ import { BoardUserComponent } from './board-user/board-user.component';
 import { SharedModule } from './_shared/shared.module'
 
 import { httpInterceptorProviders } from './_helpers/http.interceptor';
+import { HomepageComponent } from './homepage/homepage.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { httpInterceptorProviders } from './_helpers/http.interceptor';
     ProfileComponent,
     BoardAdminComponent,
     BoardUserComponent,
+    HomepageComponent,
   ],
   imports: [
     BrowserModule,
