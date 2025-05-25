@@ -1,0 +1,16 @@
+<div class="section">
+  <h3>{{ sectionTitle }}</h3>
+  <div class="card-grid">
+    <div class="doc-card" *ngFor="let doc of documents">
+      <div class="card-body">
+        <h4>{{ doc.title }}</h4>
+        <p><small>Uploaded: {{ doc.uploaded_at | date:'short' }}</small></p>
+      </div>
+      <div class="card-footer">
+        <button (click)="startChat(doc)" class="btn btn-sm btn-primary">Start Chat</button>
+        <button class="btn btn-sm btn-outline-warning">⭐ Star</button>
+      </div>
+    </div>
+  </div>
+</div>
+
