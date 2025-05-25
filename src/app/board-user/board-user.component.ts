@@ -1,33 +1,56 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../_services/user.service';
+import { ConversationService } from '../_services/conversation.service';
 
 @Component({
-  selector: 'app-board-user',
+  selector: 'app-chat',
   templateUrl: './board-user.component.html',
   styleUrls: ['./board-user.component.css']
 })
 export class BoardUserComponent implements OnInit {
-  content?: string;
+  conversations: any[] = [];
+  selectedConversation: any = null;
+  messages: any[] = [];
+  newMessage: string = '';
 
-  constructor(private userService: UserService) { }
+  constructor(private convoService: ConversationService) {}
 
   ngOnInit(): void {
-    this.userService.getUserBoard().subscribe({
-      next: data => {
-        this.content = data;
-      },
-      error: err => {
-        if (err.error) {
-          try {
-            const res = JSON.parse(err.error);
-            this.content = res.message;
-          } catch {
-            this.content = `Error with status: ${err.status} - ${err.statusText}`;
-          }
-        } else {
-          this.content = `Error with status: ${err.status}`;
-        }
+    this.loadConversations();
+  }
+
+  loadConversations(): void {
+    this.convoService.getConversations().subscribe(data => {
+      this.conversations = data;
+    });
+  }
+
+  selectConversation(convo: any): void {
+    this.selectedConversation = convo;
+    this.convoService.getMessages(convo.id).subscribe(data => {
+      this.messages = data;
+    });
+  }
+
+  deleteConversation(event: Event, convoId: string): void {
+    event.stopPropagation();
+    this.convoService.deleteConversation(convoId).subscribe(() => {
+      this.conversations = this.conversations.filter(c => c.id !== convoId);
+      if (this.selectedConversation?.id === convoId) {
+        this.selectedConversation = null;
+        this.messages = [];
       }
+    });
+  }
+
+  sendMessage(): void {
+    if (!this.newMessage.trim() || !this.selectedConversation) return;
+    this.convoService.sendMessage(this.selectedConversation.id, this.newMessage).subscribe(() => {
+      this.messages.push({
+        role: 'user',
+        content: this.newMessage,
+        created_at: new Date().toISOString()
+      });
+      this.newMessage = '';
     });
   }
 }

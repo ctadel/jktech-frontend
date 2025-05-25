@@ -1,5 +1,57 @@
-<div class="container">
-  <header class="jumbotron">
-    <p>{{ content }}</p>
-  </header>
+<div class="chat-container">
+  <aside class="convo-list">
+    <h2>Conversations</h2>
+    <ul>
+      <li
+        *ngFor="let convo of conversations"
+        (click)="selectConversation(convo)"
+        [class.selected]="selectedConversation?.id === convo.id"
+        class="convo-item"
+      >
+        <div class="convo-title">
+          <div class="title-text">
+            <span class="title-line">{{ convo.title }}</span>
+          </div>
+          <small class="created-at">{{ convo.created_at | date:'short' }}</small>
+        </div>
+        <button
+          type="button"
+          class="btn-delete"
+          title="Delete Conversation"
+          (click)="deleteConversation($event, convo.id)"
+        >
+          &times;
+        </button>
+      </li>
+    </ul>
+  </aside>
+
+  <section class="chat-window" *ngIf="selectedConversation; else noSelection">
+    <header class="chat-header">
+      <h3>{{ selectedConversation.title }}</h3>
+      <small>{{ selectedConversation.created_at | date:'medium' }}</small>
+    </header>
+
+    <div class="messages" id="messages">
+      <div *ngFor="let msg of messages" [ngClass]="{'user-msg': msg.role === 'user', 'llm-msg': msg.role !== 'user'}" class="message">
+        <div class="msg-content">{{ msg.content }}</div>
+        <div class="msg-time">{{ msg.created_at | date:'shortTime' }}</div>
+      </div>
+    </div>
+
+      <form class="chat-input-form" (submit)="sendMessage()">
+      <textarea
+        [(ngModel)]="newMessage"
+        name="message"
+        placeholder="Type your message..."
+        rows="3"
+        required
+      ></textarea>
+      <button type="submit" [disabled]="!newMessage.trim()">Send</button>
+    </form>
+  </section>
+
+  <ng-template #noSelection>
+    <div class="no-selection">Select a conversation to start chatting</div>
+  </ng-template>
 </div>

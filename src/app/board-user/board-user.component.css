@@ -1,0 +1,212 @@
+/* Container for the whole chat interface */
+.chat-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+}
+
+/* Left pane - conversation list */
+.convo-list {
+  width: 280px;
+  background: #1e293b;
+  color: white;
+  padding: 1rem;
+  overflow-y: auto;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.convo-list h2 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 0.5rem;
+}
+
+.convo-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.convo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  min-height: 60px;
+  flex-direction: column;
+}
+
+.convo-item.selected,
+.convo-item:hover {
+  background-color: #334155;
+}
+
+.convo-title {
+  width: 100%;
+}
+
+.title-text {
+  font-weight: 600;
+  line-height: 1.2;
+  max-height: 2.4rem; /* Two lines max */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.created-at {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+  display: block;
+}
+
+/* Delete button */
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  align-self: flex-start;
+  padding: 0 0.25rem;
+  margin-left: 0.5rem;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.btn-delete:hover {
+  color: #f87171;
+}
+
+/* Right pane - chat window */
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: white;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+}
+
+.chat-header {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.chat-header h3 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.chat-header small {
+  color: #6b7280;
+}
+
+/* Messages container */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  scroll-behavior: smooth;
+}
+
+/* Individual messages */
+.message {
+  max-width: 70%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  position: relative;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.user-msg {
+  background-color: #2563eb;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.llm-msg {
+  background-color: #e5e7eb;
+  color: #111827;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+/* Message timestamp */
+.msg-time {
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-top: 0.2rem;
+  text-align: right;
+}
+
+/* Input form */
+.chat-input-form {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.chat-input-form textarea {
+  flex: 1;
+  resize: vertical;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-family: inherit;
+  min-height: 60px;
+  max-height: 150px;
+  outline-offset: 2px;
+}
+
+.chat-input-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 4px #2563eb;
+}
+
+.chat-input-form button {
+  background-color: #2563eb;
+  border: none;
+  color: white;
+  padding: 0 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chat-input-form button:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.chat-input-form button:not(:disabled):hover {
+  background-color: #1e40af;
+}
+
+/* No conversation selected message */
+.no-selection {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #9ca3af;
+  font-size: 1.2rem;
+  font-style: italic;
+}
