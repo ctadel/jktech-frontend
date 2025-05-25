@@ -7,27 +7,30 @@ import { UserService } from '../_services/user.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  content?: string;
+  latestDocs: any[] = [];
+  trendingDocs: any[] = [];
+  mostLikedDocs: any[] = [];
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.userService.fetchExploreAPI().subscribe({
-      next: data => {
-        this.content = data;
-      },
-      error: err => {
-        if (err.error) {
-          try {
-            const res = JSON.parse(err.error);
-            this.content = res.message;
-          } catch {
-            this.content = `Error with status: ${err.status} - ${err.statusText}`;
-          }
-        } else {
-          this.content = `Error with status: ${err.status}`;
-        }
-      }
+    this.loadDocuments();
+  }
+
+  loadDocuments(): void {
+    this.userService.fetchLatestDocuments().subscribe({
+      next: data => this.latestDocs = data,
+      error: err => console.error('Failed to load latest docs', err)
+    });
+
+    this.userService.fetchTrendingDocuments().subscribe({
+      next: data => this.trendingDocs = data,
+      error: err => console.error('Failed to load trending docs', err)
+    });
+
+    this.userService.fetchExplore().subscribe({
+      next: data => this.mostLikedDocs = data,
+      error: err => console.error('Failed to load most liked docs', err)
     });
   }
 }

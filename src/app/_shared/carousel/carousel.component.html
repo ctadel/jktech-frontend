@@ -1,0 +1,25 @@
+<div class="carousel-container" *ngIf="documents && documents.length > 0; else noItems" >
+
+  <button class="btn nav-btn left" (click)="prev()" aria-label="Previous">&#10094;</button>
+
+  <div class="carousel-content">
+    <ng-container
+      *ngTemplateOutlet="itemTemplate; context: { $implicit: documents[currentIndex] }"
+    ></ng-container>
+  </div>
+
+  <button class="btn nav-btn right" (click)="next()" aria-label="Next">&#10095;</button>
+
+  <div class="carousel-indicators">
+    <span 
+      *ngFor="let item of documents; let i = index"
+      [class.active]="i === currentIndex"
+      (click)="currentIndex = i"
+    ></span>
+  </div>
+
+</div>
+
+<ng-template #noItems>
+  <p class="no-items-text">No items to display.</p>
+</ng-template>

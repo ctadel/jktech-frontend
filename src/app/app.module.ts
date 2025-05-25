@@ -12,6 +12,7 @@ import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { BoardUserComponent } from './board-user/board-user.component';
 
 import { httpInterceptorProviders } from './_helpers/http.interceptor';
+import { SharedModule } from './_shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -20,13 +21,14 @@ import { httpInterceptorProviders } from './_helpers/http.interceptor';
     HomeComponent,
     ProfileComponent,
     BoardAdminComponent,
-    BoardUserComponent
+    BoardUserComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

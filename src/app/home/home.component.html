@@ -1,7 +1,20 @@
 <div class="container">
   <header class="jumbotron">
-    <ul>
-        <pre>{{ content | json }}</pre>
-    </ul>
+      <h2>Latest Documents</h2>
+      <app-carousel [documents]="latestDocs"></app-carousel>
+      <app-carousel [documents]="mostLikedDocs" [itemTemplate]="docTemplate"></app-carousel>
+
+      <ng-template #docTemplate let-doc>
+        <div class="carousel-item">
+          <h4>{{ doc.title }}</h4>
+          <p><small>Uploaded at: {{ doc.uploaded_at | date:'short' }}</small></p>
+        </div>
+      </ng-template>
+
+      <!-- <h2>Trending Documents</h2> -->
+      <!-- <app-carousel [documents]="trendingDocs"></app-carousel> -->
+
+      <!-- <h2>Most Liked Documents</h2> -->
+      <!-- <app-carousel [documents]="mostLikedDocs"></app-carousel> -->
   </header>
 </div>
