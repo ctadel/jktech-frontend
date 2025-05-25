@@ -1,0 +1,50 @@
+@if (user) {
+<div class="container py-4">
+  <div class="card shadow-sm rounded-3">
+    <div class="card-body">
+      <h3 class="card-title mb-4">👤 User Profile</h3>
+
+      <div class="row mb-3">
+        <div class="col-sm-4 fw-semibold">Username:</div>
+        <div class="col-sm-8">{{ user.username }}</div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-sm-4 fw-semibold">Full Name:</div>
+        <div class="col-sm-8">{{ user.full_name }}</div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-sm-4 fw-semibold">Email:</div>
+        <div class="col-sm-8">{{ user.email }}</div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-sm-4 fw-semibold">Account Type:</div>
+        <div class="col-sm-8">
+          <span
+            class="badge"
+            [ngClass]="{
+              'bg-success': user.account_type === 'PREMIUM',
+              'bg-warning text-dark': user.account_type === 'BASIC',
+              'bg-secondary': user.account_type !== 'PREMIUM' && user.account_type !== 'BASIC'
+            }"
+          >
+            {{ user.account_type }}
+          </span>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-sm-4 fw-semibold">Joined:</div>
+        <div class="col-sm-8">
+          {{ user.created_at | date:'fullDate' }} ({{ user.created_at | date:'shortTime' }})
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+} @else {
+<p>Please login.</p>
+}
