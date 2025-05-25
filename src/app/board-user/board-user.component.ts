@@ -139,12 +139,14 @@ export class BoardUserComponent implements OnInit {
     });
   }
 
-  handleEnter(event: KeyboardEvent): void {
-    if (!event.shiftKey) {
-      event.preventDefault();
-      this.sendMessage();
-    }
+handleEnter(event: Event): void {
+  const keyboardEvent = event as KeyboardEvent;
+
+  if (keyboardEvent.key === 'Enter' && !keyboardEvent.shiftKey) {
+    keyboardEvent.preventDefault();
+    this.sendMessage();
   }
+}
 
   dropFile(event: DragEvent): void {
     event.preventDefault();

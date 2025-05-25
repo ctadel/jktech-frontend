@@ -5,11 +5,10 @@
 
     <!-- Show Ingest Button ONLY when in conversation/:id -->
     <button
-      *ngIf="selectedConversation"
-      class="btn btn-outline-primary w-100 mb-4 fw-semibold"
+      class="btn btn-outline-warning w-100 mb-4 fw-semibold"
       (click)="goToIngest()"
     >
-      <i class="bi bi-plus-circle me-2"></i> Ingest a new document
+      <i class="bi bi-plus-circle me-2"></i><br>Ingest a new document
     </button>
 
     <ul class="list-group">
@@ -27,7 +26,7 @@
         </div>
         <button
           type="button"
-          class="btn btn-sm text-danger"
+          class="btn btn-sm btn-delete"
           title="Delete"
           (click)="deleteConversation($event, convo.id)"
         >
@@ -76,6 +75,7 @@
   <!-- Input Form -->
   <form class="chat-input-form border-top px-4 py-3 d-flex gap-2 align-items-center" (submit)="sendMessage()">
     <textarea
+      (keydown.enter)="handleEnter($event)"
       [(ngModel)]="newMessage"
       name="message"
       class="form-control flex-grow-1"
@@ -83,7 +83,6 @@
       rows="2"
       [disabled]="loading"
       required
-      (keydown.enter)="handleEnter($event)"
     ></textarea>
     <button
       type="submit"
@@ -99,7 +98,7 @@
     <ng-template #ingestForm>
       <div class="d-flex flex-column justify-content-center align-items-center h-100 p-4">
         <div class="card shadow-sm p-4 w-100" style="max-width: 500px">
-          <h5 class="mb-4">Upload a New Document</h5>
+          <h5 class="mb-4">Ingest a new Document</h5>
 
           <form (ngSubmit)="submitIngestForm()" #uploadForm="ngForm">
             <div
