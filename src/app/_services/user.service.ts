@@ -43,16 +43,4 @@ export class UserService {
   fetchTrendingDocuments(): Observable<any> {
     return this.http.get(API_URL + '/documents/public/explore/trending', { responseType: 'json' });
   }
-
-  getUserBoard(): Observable<any> {
-    const headers = this._get_header();
-    return this.http.get<UserProfile>(API_URL + '/conversations', {
-      headers: headers,
-      responseType: 'json'
-    });
-  }
-
-  getAdminBoard(): Observable<any> {
-    return this.http.get(API_URL + '/users/profile/users', { responseType: 'json' });
-  }
 }

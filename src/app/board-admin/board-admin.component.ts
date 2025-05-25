@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
+import { AdminService } from '../_services/admin.service';
 
 @Component({
   selector: 'app-board-admin',
@@ -9,25 +10,44 @@ import { UserService } from '../_services/user.service';
 export class BoardAdminComponent implements OnInit {
   content?: string;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private adminService: AdminService) { }
 
-  ngOnInit(): void {
-    this.userService.getAdminBoard().subscribe({
-      next: data => {
-        this.content = data;
+  page = 1;
+  users: any[] = [];
+  columns = ['id', 'username', 'email', 'account_type', 'created_at'];
+  hasMore = true;
+  isLoading = false;
+
+  loadUsers(page: number) {
+    this.isLoading = true
+    this.page = page;
+    this.adminService.fetchUsers(page).subscribe({
+      next: (res) => {
+        this.users = res;
+        this.hasMore = res.length === 10;
       },
-      error: err => {
-        if (err.error) {
-          try {
-            const res = JSON.parse(err.error);
-            this.content = res.message;
-          } catch {
-            this.content = `Error with status: ${err.status} - ${err.statusText}`;
-          }
-        } else {
-          this.content = `Error with status: ${err.status}`;
-        }
+      error: (err) => {
+        console.log("error while fetching the users", err)
+      },
+      complete: () => {
+        this.isLoading =false
       }
     });
+  }
+
+  ngOnInit() {
+    this.loadUsers(this.page);
+  }
+
+  onAddUser() {
+    // open modal or navigate to form
+  }
+
+  onEditUser(user: any) {
+    // open edit form with user info
+  }
+
+  onDeleteUser(user: any) {
+    // confirm and call API
   }
 }

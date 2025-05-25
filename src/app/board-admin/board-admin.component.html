@@ -1,5 +1,18 @@
 <div class="container">
   <header class="jumbotron">
-    <pre>{{ content | json }}</pre>
+    <h1>Manage Users</h1>
+    <app-data-table
+      [columns]="columns"
+      [data]="users"
+      [loading]="isLoading"
+      [page]="page"
+      [hasMore]="hasMore"
+      (nextPage)="loadUsers($event)"
+      (prevPage)="loadUsers($event)"
+      (firstPage)="loadUsers(1)"
+      (addNew)="onAddUser()"
+      (editRow)="onEditUser($event)"
+      (deleteRow)="onDeleteUser($event)"
+    ></app-data-table>
   </header>
 </div>
