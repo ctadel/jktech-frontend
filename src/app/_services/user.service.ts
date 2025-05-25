@@ -36,12 +36,12 @@ export class UserService {
 
   // based on upload date
   fetchLatestDocuments(): Observable<any> {
-    return this.http.get(API_URL + '/documents/public/latest', { responseType: 'json' });
+    return this.http.get(API_URL + '/documents/public/explore/latest', { responseType: 'json' });
   }
 
   // based on top stars
   fetchTrendingDocuments(): Observable<any> {
-    return this.http.get(API_URL + '/documents/public/trending', { responseType: 'json' });
+    return this.http.get(API_URL + '/documents/public/explore/trending', { responseType: 'json' });
   }
 
   getUserBoard(): Observable<any> {

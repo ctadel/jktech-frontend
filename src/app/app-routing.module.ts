@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'auth', component: AuthComponent, canActivate:[antiAuthGuard]},
   { path: 'profile', component: ProfileComponent, canActivate:[authGuard]},
   { path: 'conversations', component: BoardUserComponent, canActivate:[authGuard]},
+  { path: 'conversation/:id', component: BoardUserComponent, canActivate:[authGuard] },
   { path: 'admin', component: BoardAdminComponent, canActivate:[authGuard, adminGuard]},
   { path: '', redirectTo: 'explore', pathMatch: 'full' }
 ];

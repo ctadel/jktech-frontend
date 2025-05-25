@@ -1,23 +1,34 @@
-<div class="chat-container">
+<div class="chat-container d-flex">
+  <!-- Sidebar -->
   <aside class="convo-list">
-    <h2>Conversations</h2>
-    <ul>
+    <h2 class="mb-4">Conversations</h2>
+
+    <!-- Show Ingest Button ONLY when in conversation/:id -->
+    <button
+      *ngIf="selectedConversation"
+      class="btn btn-outline-primary w-100 mb-4 fw-semibold"
+      (click)="goToIngest()"
+    >
+      <i class="bi bi-plus-circle me-2"></i> Ingest a new document
+    </button>
+
+    <ul class="list-group">
       <li
         *ngFor="let convo of conversations"
         (click)="selectConversation(convo)"
-        [class.selected]="selectedConversation?.id === convo.id"
-        class="convo-item"
+        [class.active]="selectedConversation?.id === convo.id"
+        class="list-group-item list-group-item-action d-flex justify-content-between align-items-start"
       >
-        <div class="convo-title">
-          <div class="title-text">
-            <span class="title-line">{{ convo.title }}</span>
+        <div>
+          <div class="fw-semibold text-truncate" style="max-width: 160px">
+            {{ convo.title }}
           </div>
-          <small class="created-at">{{ convo.created_at | date:'short' }}</small>
+          <small class="text-muted">{{ convo.created_at | date: 'short' }}</small>
         </div>
         <button
           type="button"
-          class="btn-delete"
-          title="Delete Conversation"
+          class="btn btn-sm text-danger"
+          title="Delete"
           (click)="deleteConversation($event, convo.id)"
         >
           &times;
@@ -26,32 +37,129 @@
     </ul>
   </aside>
 
-  <section class="chat-window" *ngIf="selectedConversation; else noSelection">
-    <header class="chat-header">
-      <h3>{{ selectedConversation.title }}</h3>
-      <small>{{ selectedConversation.created_at | date:'medium' }}</small>
-    </header>
+  <!-- Chat Area -->
+  <section class="chat-window flex-grow-1 d-flex flex-column">
+<ng-container *ngIf="selectedConversation; else ingestForm">
+  <!-- Header -->
+  <header class="chat-header border-bottom px-4 py-3 d-flex justify-content-between align-items-center">
+    <div>
+      <h5 class="mb-0 text-truncate" style="max-width: 70vw;">
+        {{ selectedConversation.title }}
+      </h5>
+      <small class="text-muted">{{ selectedConversation.created_at | date: 'medium' }}</small>
+    </div>
+  </header>
 
-    <div class="messages" id="messages">
-      <div *ngFor="let msg of messages" [ngClass]="{'user-msg': msg.role === 'user', 'llm-msg': msg.role !== 'user'}" class="message">
-        <div class="msg-content">{{ msg.content }}</div>
-        <div class="msg-time">{{ msg.created_at | date:'shortTime' }}</div>
+  <!-- Messages -->
+  <div class="messages flex-grow-1 overflow-auto px-4 py-3 d-flex flex-column gap-3">
+    <div *ngFor="let msg of messages" 
+         [ngClass]="{
+           'align-self-end': msg.role === 'user',
+           'align-self-start': msg.role !== 'user'
+         }" 
+         class="message-bubble p-3 rounded"
+         [class.user-message]="msg.role === 'user'"
+         [class.bot-message]="msg.role !== 'user'"
+         style="max-width: 75vw; word-wrap: break-word;">
+      {{ msg.content }}
+      <div class="message-time small text-muted mt-1 text-end">
+        {{ msg.created_at | date: 'shortTime' }}
       </div>
     </div>
+  </div>
 
-      <form class="chat-input-form" (submit)="sendMessage()">
-      <textarea
-        [(ngModel)]="newMessage"
-        name="message"
-        placeholder="Type your message..."
-        rows="3"
-        required
-      ></textarea>
-      <button type="submit" [disabled]="!newMessage.trim()">Send</button>
-    </form>
+  <!-- Loading progress bar -->
+  <div *ngIf="loading" class="progress-bar-container">
+    <div class="progress-bar-marquee"></div>
+  </div>
+
+  <!-- Input Form -->
+  <form class="chat-input-form border-top px-4 py-3 d-flex gap-2 align-items-center" (submit)="sendMessage()">
+    <textarea
+      [(ngModel)]="newMessage"
+      name="message"
+      class="form-control flex-grow-1"
+      placeholder="Type your message..."
+      rows="2"
+      [disabled]="loading"
+      required
+    ></textarea>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="!newMessage.trim() || loading"
+    >
+      Send
+    </button>
+  </form>
+</ng-container>
+
+    <!-- Ingest Form (when no conversation selected) -->
+    <ng-template #ingestForm>
+      <div class="d-flex flex-column justify-content-center align-items-center h-100 p-4">
+        <div class="card shadow-sm p-4 w-100" style="max-width: 500px">
+          <h5 class="mb-4">Upload a New Document</h5>
+
+          <form (ngSubmit)="submitIngestForm()" #uploadForm="ngForm">
+            <div
+              class="border border-2 rounded text-center p-4 mb-3"
+              [ngClass]="{ 'border-primary': file }"
+            >
+              <label for="fileUpload" class="form-label text-muted">
+                <i class="bi bi-cloud-arrow-up fs-2 d-block mb-2"></i>
+                <span *ngIf="!file">Drag and drop or click to upload a file</span>
+                <span *ngIf="file" class="text-success">✔ {{ file.name }}</span>
+              </label>
+              <input
+                type="file"
+                id="fileUpload"
+                class="form-control d-none"
+                (change)="onFileSelected($event)"
+                accept=".pdf,.doc,.docx,.txt"
+                required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="title" class="form-label">Document Title</label>
+              <input
+                type="text"
+                id="title"
+                class="form-control"
+                [(ngModel)]="formTitle"
+                name="title"
+                required
+              />
+            </div>
+
+            <div class="form-check form-switch mb-3">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="privateCheck"
+                [(ngModel)]="isPrivate"
+                name="private"
+              />
+              <label class="form-check-label" for="privateCheck">
+                Private Document
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-success w-100"
+              [disabled]="!file || !formTitle.trim() || loading"
+            >
+              <span *ngIf="!loading">Upload & Start Chat</span>
+              <span *ngIf="loading"><i class="bi bi-arrow-repeat spin"></i> Uploading...</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </ng-template>
   </section>
-
-  <ng-template #noSelection>
-    <div class="no-selection">Select a conversation to start chatting</div>
-  </ng-template>
+  <!-- Global loading bar -->
+  <div *ngIf="loading" class="progress-bar-container">
+    <div class="progress-bar-marquee"></div>
+  </div>
 </div>
