@@ -61,6 +61,8 @@ export class BoardUserComponent implements OnInit {
     const selected = target.files && target.files[0];
     if (selected) {
       this.file = selected;
+      const nameWithoutExtension = selected.name.replace(/\.[^/.]+$/, '');
+      this.formTitle = nameWithoutExtension;
     }
   }
 
@@ -137,8 +139,11 @@ export class BoardUserComponent implements OnInit {
     });
   }
 
-  handleFileInput(event: any): void {
-    this.documentFile = event.target.files[0];
+  handleEnter(event: KeyboardEvent): void {
+    if (!event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
   }
 
   dropFile(event: DragEvent): void {
@@ -151,4 +156,6 @@ export class BoardUserComponent implements OnInit {
   allowDrop(event: DragEvent): void {
     event.preventDefault();
   }
+
+
 }
