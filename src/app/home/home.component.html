@@ -1,7 +1,20 @@
 <div class="container">
   <header class="jumbotron">
-    <ul>
-        <pre>{{ content | json }}</pre>
-    </ul>
+    <div class="container">
+      <app-document-card-list
+        [documents]="latestDocs"
+        sectionTitle="Latest Documents">
+      </app-document-card-list>
+
+      <app-document-card-list
+        [documents]="trendingDocs"
+        sectionTitle="Trending Documents">
+      </app-document-card-list>
+
+      <app-document-card-list
+        [documents]="mostLikedDocs"
+        sectionTitle="Most Liked Documents">
+      </app-document-card-list>
+    </div>
   </header>
 </div>
