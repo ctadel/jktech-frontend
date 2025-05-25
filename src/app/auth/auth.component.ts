@@ -44,8 +44,6 @@ export class AuthComponent {
         this.storageService.saveItem(this.storageService.TOKEN_KEY, data);
         this.userService.getUserProfile().subscribe({
           next: user => {
-            console.log(`Logged in user: ${user.username}`);
-
             this.storageService.saveItem(this.storageService.USER_KEY, user);
 
             this.isLoginFailed = false;
@@ -70,7 +68,6 @@ export class AuthComponent {
     const { username, fullname, email, password } = this.register;
     this.authService.register(username, fullname, email, password).subscribe({
       next: data => {
-        console.log(data);
         this.isSuccessful = true;
         this.isSignUpFailed = false;
       },

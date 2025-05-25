@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit {
     this.userService.fetchExploreAPI().subscribe({
       next: data => {
         this.content = data;
-        console.log(data)
       },
       error: err => {
         if (err.error) {

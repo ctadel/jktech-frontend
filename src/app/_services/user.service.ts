@@ -15,7 +15,6 @@ export class UserService {
   _get_header() {
     const storage = new StorageService()
     let token = storage.getItem(storage.TOKEN_KEY).access_token
-    console.log(token)
     const header = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
