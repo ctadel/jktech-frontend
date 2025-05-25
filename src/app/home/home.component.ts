@@ -7,8 +7,6 @@ import { UserService } from '../_services/user.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  latestDocs: any[] = [];
-  trendingDocs: any[] = [];
   mostLikedDocs: any[] = [];
 
   constructor(private userService: UserService) { }
@@ -18,18 +16,11 @@ export class HomeComponent implements OnInit {
   }
 
   loadDocuments(): void {
-    this.userService.fetchLatestDocuments().subscribe({
-      next: data => this.latestDocs = data,
-      error: err => console.error('Failed to load latest docs', err)
-    });
-
-    this.userService.fetchTrendingDocuments().subscribe({
-      next: data => this.trendingDocs = data,
-      error: err => console.error('Failed to load trending docs', err)
-    });
-
     this.userService.fetchExplore().subscribe({
-      next: data => this.mostLikedDocs = data,
+      next: data => {
+        this.mostLikedDocs = data
+        console.table(data)
+        },
       error: err => console.error('Failed to load most liked docs', err)
     });
   }

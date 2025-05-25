@@ -8,4 +8,9 @@ import { Component, Input } from '@angular/core';
 export class DocumentCardListComponent {
   @Input() documents: any[] = [];
   @Input() sectionTitle: string = '';
+
+startChat(doc: any): void {
+  console.log('Start chat clicked for:', doc);
+  // TODO: implement actual navigation logic later
+}
 }

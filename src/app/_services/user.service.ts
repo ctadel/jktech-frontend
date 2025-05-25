@@ -29,12 +29,19 @@ export class UserService {
     });
   }
 
-  getPublicContent(): Observable<any> {
-    return this.http.get(API_URL + '/explore', { responseType: 'json' });
+  // based on top views
+  fetchExplore(): Observable<any> {
+    return this.http.get(API_URL + '/documents/public/explore', { responseType: 'json' });
   }
 
-  fetchExploreAPI(): Observable<any> {
-    return this.http.get(API_URL + '/documents/public/explore', { responseType: 'json' });
+  // based on upload date
+  fetchLatestDocuments(): Observable<any> {
+    return this.http.get(API_URL + '/documents/public/latest', { responseType: 'json' });
+  }
+
+  // based on top stars
+  fetchTrendingDocuments(): Observable<any> {
+    return this.http.get(API_URL + '/documents/public/trending', { responseType: 'json' });
   }
 
   getUserBoard(): Observable<any> {

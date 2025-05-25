@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { BoardUserComponent } from './board-user/board-user.component';
+import { SharedModule } from './_shared/shared.module'
 
 import { httpInterceptorProviders } from './_helpers/http.interceptor';
 
@@ -20,13 +21,14 @@ import { httpInterceptorProviders } from './_helpers/http.interceptor';
     HomeComponent,
     ProfileComponent,
     BoardAdminComponent,
-    BoardUserComponent
+    BoardUserComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
