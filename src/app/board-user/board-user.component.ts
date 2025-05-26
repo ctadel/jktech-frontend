@@ -1,4 +1,3 @@
-// board-user.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationService } from '../_services/conversation.service';
@@ -158,6 +157,4 @@ handleEnter(event: Event): void {
   allowDrop(event: DragEvent): void {
     event.preventDefault();
   }
-
-
 }
