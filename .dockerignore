@@ -1,0 +1,39 @@
+# Node modules
+node_modules
+**/node_modules
+
+# Build output
+dist
+build
+tmp
+temp
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.*
+
+# Angular specific
+.angular
+.angular/cache
+coverage
+
+# Git and version control
+.git
+.gitignore
+.gitattributes
+
+# IDE/editor folders
+.vscode
+.idea
+.DS_Store
+
+# Docker-related
+Dockerfile*
+.dockerignore
+
+# OS-specific
+Thumbs.db
