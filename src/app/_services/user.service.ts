@@ -3,8 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import { UserProfile } from '../models/user.model';
-
-const API_URL = 'http://localhost:8000/api/v1';
+import { BASE_URL } from './api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +22,7 @@ export class UserService {
 
   getUserProfile(): Observable<UserProfile> {
     const headers = this._get_header();
-    return this.http.get<UserProfile>(API_URL + '/users/profile', {
+    return this.http.get<UserProfile>(BASE_URL + '/users/profile', {
       headers: headers,
       responseType: 'json'
     });
@@ -31,16 +30,16 @@ export class UserService {
 
   // based on top views
   fetchExplore(): Observable<any> {
-    return this.http.get(API_URL + '/documents/public/explore', { responseType: 'json' });
+    return this.http.get(BASE_URL + '/documents/public/explore', { responseType: 'json' });
   }
 
   // based on upload date
   fetchLatestDocuments(): Observable<any> {
-    return this.http.get(API_URL + '/documents/public/explore/latest', { responseType: 'json' });
+    return this.http.get(BASE_URL + '/documents/public/explore/latest', { responseType: 'json' });
   }
 
   // based on top stars
   fetchTrendingDocuments(): Observable<any> {
-    return this.http.get(API_URL + '/documents/public/explore/trending', { responseType: 'json' });
+    return this.http.get(BASE_URL + '/documents/public/explore/trending', { responseType: 'json' });
   }
 }

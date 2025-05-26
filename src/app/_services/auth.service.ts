@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
-
-const AUTH_API = 'http://localhost:8000/api/v1/users/auth/';
+import { BASE_URL } from './api.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -25,7 +24,7 @@ export class AuthService {
 
   login(username: string, password: string): Observable<any> {
     return this.http.post(
-      AUTH_API + 'login',
+      BASE_URL + '/users/auth/login',
       {
         username,
         password,
@@ -36,7 +35,7 @@ export class AuthService {
 
   register(username: string, fullname: string, email: string, password: string): Observable<any> {
     return this.http.post(
-      AUTH_API + 'register',
+      BASE_URL + '/users/auth/register',
       {
         username,
         fullname,
