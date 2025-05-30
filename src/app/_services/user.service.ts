@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import { UserProfile } from '../models/user.model';
 import { BASE_URL } from './api.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,7 @@ export class UserService {
     return this.http.get<UserProfile>(BASE_URL + '/users/profile', {
       headers: headers,
       responseType: 'json'
-    });
+    })
   }
 
   // based on top views
@@ -41,5 +42,12 @@ export class UserService {
   // based on top stars
   fetchTrendingDocuments(): Observable<any> {
     return this.http.get(BASE_URL + '/documents/public/explore/trending', { responseType: 'json' });
+  }
+
+  fetchUserDocuments(): Observable<any> {
+    // if the user is logged in then get the username
+    const auth = new AuthService(this.http, new StorageService());
+    const username = auth.getLoggedInUser().username;
+    return this.http.get(BASE_URL + `/documents/public/user/${username}`, { responseType: 'json' });
   }
 }

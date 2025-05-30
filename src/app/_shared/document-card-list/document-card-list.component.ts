@@ -20,7 +20,7 @@ export class DocumentCardListComponent {
   ) {}
 
   ngOnInit() {
-    this.isLoggedIn = this.authService.isLoggedIn(); // or however you check
+    this.isLoggedIn = this.authService.isLoggedIn();
   }
 
   toggleStar(doc: any) {

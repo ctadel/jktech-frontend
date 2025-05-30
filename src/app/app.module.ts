@@ -14,6 +14,7 @@ import { SharedModule } from './_shared/shared.module'
 
 import { httpInterceptorProviders } from './_helpers/http.interceptor';
 import { HomepageComponent } from './homepage/homepage.component';
+import { DocumentsComponent } from './documents/documents.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { HomepageComponent } from './homepage/homepage.component';
     BoardAdminComponent,
     BoardUserComponent,
     HomepageComponent,
+    DocumentsComponent,
   ],
   imports: [
     BrowserModule,

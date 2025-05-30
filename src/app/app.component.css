@@ -2,8 +2,7 @@
   background-color: grey;
   color: #003366 !important;
   border-radius: 8px;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.5s ease;
 }
 
 .superadmin-link:hover {
