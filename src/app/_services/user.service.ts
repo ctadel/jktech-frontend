@@ -45,9 +45,10 @@ export class UserService {
   }
 
   fetchUserDocuments(): Observable<any> {
-    // if the user is logged in then get the username
-    const auth = new AuthService(this.http, new StorageService());
-    const username = auth.getLoggedInUser().username;
-    return this.http.get(BASE_URL + `/documents/public/user/${username}`, { responseType: 'json' });
+    const headers = this._get_header()
+    return this.http.get(BASE_URL + `/documents`, {
+      responseType: 'json',
+      headers: headers
+    });
   }
 }
