@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { adminGuard, authGuard, antiAuthGuard } from './_guards/auth.guard';
 
 import { AuthComponent } from './auth/auth.component';
-import { HomeComponent } from './home/home.component';
+import { ExploreComponent } from './explore/explore.component';
 import { ProfileComponent } from './profile/profile.component';
 import { BoardUserComponent } from './board-user/board-user.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
@@ -13,7 +13,7 @@ import { DocumentsComponent } from './documents/documents.component';
 
 const routes: Routes = [
   { path: 'home', component: HomepageComponent },
-  { path: 'explore', component: HomeComponent },
+  { path: 'explore', component: ExploreComponent },
   { path: 'auth', component: AuthComponent, canActivate:[antiAuthGuard]},
   { path: 'profile', component: ProfileComponent, canActivate:[authGuard]},
   { path: 'conversations', component: BoardUserComponent, canActivate:[authGuard]},

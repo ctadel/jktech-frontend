@@ -3,10 +3,10 @@ import { UserService } from '../_services/user.service';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  templateUrl: './explore.component.html',
+  styleUrls: ['./explore.component.css']
 })
-export class HomeComponent implements OnInit {
+export class ExploreComponent implements OnInit {
   latestDocs: any[] = [];
   trendingDocs: any[] = [];
   mostLikedDocs: any[] = [];

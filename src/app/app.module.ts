@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
-import { HomeComponent } from './home/home.component';
+import { ExploreComponent } from './explore/explore.component';
 import { ProfileComponent } from './profile/profile.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { BoardUserComponent } from './board-user/board-user.component';
@@ -20,7 +20,7 @@ import { DocumentsComponent } from './documents/documents.component';
   declarations: [
     AppComponent,
     AuthComponent,
-    HomeComponent,
+    ExploreComponent,
     ProfileComponent,
     BoardAdminComponent,
     BoardUserComponent,
