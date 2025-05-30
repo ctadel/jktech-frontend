@@ -12,6 +12,7 @@ export class DocumentCardListComponent {
   @Input() documents: any[] = [];
   @Input() sectionTitle: string = ''
   isLoggedIn = false;
+  user: any = {};
 
   constructor(
     private conversationService: ConversationService,
@@ -21,6 +22,7 @@ export class DocumentCardListComponent {
 
   ngOnInit() {
     this.isLoggedIn = this.authService.isLoggedIn();
+    this.user = this.authService.getLoggedInUser()
   }
 
   toggleStar(doc: any) {

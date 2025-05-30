@@ -1,16 +1,19 @@
 <div class="container">
   <header class="jumbotron">
     <div class="container">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 border-b-2 border-blue-200 pb-1 mt-5">Latest Documents</h1>
       <app-document-card-list
         [documents]="latestDocs"
         sectionTitle="Latest Documents">
       </app-document-card-list>
 
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 border-b-2 border-blue-200 pb-1 mt-5">Trending Documents</h1>
       <app-document-card-list
         [documents]="trendingDocs"
         sectionTitle="Trending Documents">
       </app-document-card-list>
 
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 border-b-2 border-blue-200 pb-1 mt-5">Most Queried Documents</h1>
       <app-document-card-list
         [documents]="mostLikedDocs"
         sectionTitle="Most Queried Documents">

@@ -1,27 +1,19 @@
-.section {
-  margin-bottom: 2rem;
+.user-owned {
+  position: relative;
+  overflow: hidden; /* to clip the tilted stripe */
 }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+.user-owned::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -30%;
+  width: 60%;
+  height: 100%;
+  background-color: #111827;
+  opacity: 0.3;
+  transform: skewX(-30deg);
+  transform-origin: top right;
+  pointer-events: none;
+  z-index: 0;
 }
-
-.doc-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  background: #fff;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-}
-

@@ -6,11 +6,11 @@
         <a routerLink="/" class="text-3xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 to-purple-400 text-transparent bg-clip-text">
           Ctadel
         </a>
+        <a *ngIf="showAdminBoard" routerLink="/admin" class="superadmin-link p-2">SuperAdmin</a>
         <div class="hidden md:flex items-center space-x-6">
           <a routerLink="/explore" class="hover:text-indigo-300 transition">Explore</a>
           <a *ngIf="isLoggedIn" routerLink="/conversations" class="hover:text-indigo-300 transition">Conversations</a>
           <a *ngIf="isLoggedIn" routerLink="/documents" class="hover:text-indigo-300 transition">Documents</a>
-          <a *ngIf="showAdminBoard" routerLink="/admin" class="hover:text-yellow-300 font-semibold transition">SuperAdmin</a>
         </div>
       </div>
 

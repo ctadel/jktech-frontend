@@ -47,7 +47,6 @@ export class AppComponent {
 
       this.showAdminBoard = (user.account_type == 'MODERATOR')
       this.user = user
-      console.log(user)
     }
 
     this.eventBusSub = this.eventBusService.on('logout', () => {
