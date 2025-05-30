@@ -1,108 +1,72 @@
-<div id="app">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" routerLink="/">ctadel</a>
+<nav class="bg-gray-900 text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Left: Brand + Menu -->
+      <div class="flex items-center space-x-8">
+        <a routerLink="/" class="text-3xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 to-purple-400 text-transparent bg-clip-text">
+          Ctadel
+        </a>
+        <div class="hidden md:flex items-center space-x-6">
+          <a routerLink="/explore" class="hover:text-indigo-300 transition">Explore</a>
+          <a *ngIf="isLoggedIn" routerLink="/conversations" class="hover:text-indigo-300 transition">Conversations</a>
+          <a *ngIf="isLoggedIn" routerLink="/documents" class="hover:text-indigo-300 transition">Documents</a>
+          <a *ngIf="showAdminBoard" routerLink="/admin" class="hover:text-yellow-300 font-semibold transition">SuperAdmin</a>
+        </div>
+      </div>
 
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarContent"
-        aria-controls="navbarContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <!-- Right: Login/Register OR Profile -->
+      <div class="flex items-center space-x-4">
+        <ng-container *ngIf="!isLoggedIn; else loggedIn">
+          <a routerLink="/auth" class="hover:text-indigo-300 transition font-medium">Login / Register</a>
+        </ng-container>
 
-      <div class="collapse navbar-collapse" id="navbarContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              @if (showAdminBoard) {
-  <li class="nav-item">
-    <a
-      class="nav-link superadmin-link me-3"
-      routerLink="/admin"
-      routerLinkActive="active"
-      >SuperAdmin</a
-    >
-  </li>
-    }
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/explore" routerLinkActive="active">Explore</a>
-          </li>
-          @if (isLoggedIn) {
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/conversations" routerLinkActive="active">Conversations</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/documents" routerLinkActive="active">Documents</a>
-            </li>
-          }
-        </ul>
+        <ng-template #loggedIn>
+          <div #dropdownRef class="relative z-50">
+            <div class="flex items-center cursor-pointer space-x-2" (click)="toggleDropdown()">
+              <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-sm font-bold uppercase">
+                {{ user.full_name.charAt(0) }}
+              </div>
+              <svg class="w-4 h-4 transform transition-transform duration-200" [class.rotate-180]="isDropdownOpen" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.06z"
+                      clip-rule="evenodd"/>
+              </svg>
+            </div>
 
-        <ul class="navbar-nav ms-auto">
-          @if (!isLoggedIn) {
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/auth" routerLinkActive="active">Login / Register</a>
-            </li>
-          } @else {
-            <li class="nav-item dropdown" data-bs-auto-close="outside">
-              <a
-                class="nav-link dropdown-toggle d-flex align-items-center"
-                href="#"
-                id="userDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <div
-                  class="rounded-circle bg-primary text-white text-uppercase d-flex align-items-center justify-content-center me-2"
-                  style="width: 32px; height: 32px; font-size: 14px;"
-                >
-                  {{ user.full_name.charAt(0) }}
+            <!-- Dropdown -->
+            <div *ngIf="isDropdownOpen"
+                 class="absolute right-0 mt-2 w-64 bg-white text-black rounded-md shadow-lg z-50 animate-fadeIn">
+              <div class="p-4 border-b">
+                <div class="flex justify-between items-center font-semibold">
+                  {{ user.full_name || user.username }}
+                  <span *ngIf="user.account_type === 'PREMIUM'" class="text-xs bg-yellow-400 text-black px-2 py-0.5 rounded select-none">Premium ✨</span>
                 </div>
+                <div class="text-sm text-gray-500">{{ user.email || user.username }}</div>
+              </div>
+
+              <div *ngIf="user.account_type === 'BASIC'" class="px-4 py-2 select-none" >
+                <button (click)="upgradeAccount()" class="w-full text-sm text-yellow-700 border border-yellow-500 rounded py-1 hover:bg-yellow-100">
+                  Upgrade to Premium
+                </button>
+              </div>
+
+              <a routerLink="/profile" class="block px-4 py-2 hover:bg-gray-100 text-sm flex items-center space-x-2">
+                <span>👤</span><span>Profile</span>
               </a>
-
-                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
-                  <li class="px-3 py-2">
-                    <div class="fw-bold d-flex align-items-center justify-content-between">
-                      {{ user.fullname || user.username }}
-                      @if (user.account_type === 'PREMIUM') {
-                        <span class="badge bg-warning text-dark ms-2">Premium ✨</span>
-                      }
-                    </div>
-                    <div class="small text-muted">{{ user.email }}</div>
-                  </li>
-
-                  @if (user.account_type === 'BASIC') {
-                    <li class="px-3 py-2">
-                      <button class="btn btn-sm btn-outline-warning w-100" (click)="upgradeAccount()">
-                        Upgrade to Premium
-                      </button>
-                    </li>
-                  }
-
-                  <li><hr class="dropdown-divider" /></li>
-
-                  <li>
-                    <a class="dropdown-item" routerLink="/profile">
-                      <i class="bi bi-person me-2"></i> Profile
-                    </a>
-                  </li>
-                  <li>
-                    <button class="dropdown-item text-danger" (click)="logout()">
-                      <i class="bi bi-box-arrow-right me-2"></i> Sign Out
-                    </button>
-                  </li>
-                </ul>
-            </li>
-          }
-        </ul>
+              <button (click)="logout()" class="block w-full text-left px-4 py-2 mb-1 text-red-600 hover:bg-red-50 text-sm flex items-center space-x-2">
+                <span>🚪</span><span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </div>
-  </nav>
-
-  <div class="container">
-    <router-outlet></router-outlet>
   </div>
+</nav>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+<div class="container">
+  <router-outlet></router-outlet>
 </div>
