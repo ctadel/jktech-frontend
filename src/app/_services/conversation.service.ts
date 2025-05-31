@@ -52,13 +52,4 @@ export class ConversationService {
     });
   }
 
-  uploadDocument(file: File, title: string, isPrivate: boolean) {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', title);
-    formData.append('is_private', isPrivate.toString());
-    return this.http.post(`${BASE_URL}/documents`, formData, {
-      headers: this.user._get_header()
-    });
-  }
 }

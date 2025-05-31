@@ -7,11 +7,12 @@ export interface PublicDocument {
   user_id: number;
   stars: number;
   views: number;
+  is_private_document: boolean;
 }
 
 export interface UserDocument extends PublicDocument {
   file_path: string;
-  is_private_document: boolean;
+  ingestion_status: string;
 }
 
 export interface UserDocumentStats {

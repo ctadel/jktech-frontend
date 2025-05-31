@@ -31,4 +31,10 @@ export class DocumentCardListComponent {
       error: err => console.error('Failed to start conversation', err)
     });
   }
+
+  manage_document(document_key: string) {
+    this.router.navigate([`/document/${document_key}`]);
+  }
+
+
 }

@@ -35,29 +35,33 @@
     <ul
       class="flex flex-col overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
     >
-      <li
-        *ngFor="let convo of conversations"
-        (click)="selectConversation(convo)"
-        [class.bg-gray-300]="selectedConversation?.id === convo.id"
-        class="cursor-pointer p-3 flex justify-between items-center transition hover:bg-gray-200"
-      >
-        <div class="overflow-hidden">
-          <div class="font-semibold truncate max-w-[14rem]">
-            {{ convo.title }}
-          </div>
-          <small class="text-gray-600">{{ convo.created_at | date: 'short' }}</small>
+    <li
+      *ngFor="let convo of conversations"
+      (click)="selectConversation(convo)"
+      [class.bg-gray-300]="selectedConversation?.id === convo.id"
+      class="cursor-pointer p-3 flex justify-between items-center transition hover:bg-gray-200"
+    >
+      <div class="overflow-hidden">
+        <div class="font-semibold truncate max-w-[14rem]">
+          {{ convo.title }}
         </div>
+        <small class="text-gray-600 flex items-center space-x-1">
+          <span *ngIf="convo.user_id === user.id" class="text-blue-600">👤</span>
+          <span>{{ convo.created_at | date: 'short' }}</span>
+        </small>
+      </div>
 
-        <button
-          type="button"
-          class="text-gray-400 hover:text-red-500 text-xl font-bold leading-none px-2 py-1 select-none"
-          title="Delete"
-          (click)="deleteConversation($event, convo.id)"
-        >
-          &times;
-        </button>
-      </li>
-    </ul>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-red-500 text-xl font-bold leading-none px-2 py-1 select-none"
+        title="Delete"
+        (click)="deleteConversation($event, convo.id)"
+      >
+        &times;
+      </button>
+    </li>
+
+  </ul>
   </aside>
 
   <!-- Chat Area -->
@@ -138,17 +142,21 @@
             <label
               for="fileUpload"
               class="block border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-blue-700 transition"
-              [ngClass]="{'border-blue-700': file}"
+              [ngClass]="{ 'border-blue-700': file }"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
             >
               <i class="bi bi-cloud-arrow-up fs-2 mb-3 inline-block text-blue-700"></i>
-              <div *ngIf="!file" class="text-gray-500">Drag and drop or click to upload a file</div>
-              <div *ngIf="file" class="text-green-600 font-semibold">✔ {{ file.name }}</div>
+              <div class="text-gray-500">Drag and drop or click to upload a file</div>
+              <div *ngIf="file" class="mt-4 text-sm text-green-700">
+                Selected: {{ file.name }}
+              </div>
               <input
                 type="file"
                 id="fileUpload"
                 class="hidden"
                 (change)="onFileSelected($event)"
-                accept=".pdf,.doc,.docx,.txt"
                 required
               />
             </label>
@@ -166,15 +174,28 @@
             </div>
 
             <div class="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="privateCheck"
-                [(ngModel)]="isPrivate"
-                name="private"
-                class="rounded border-gray-300 focus:ring-blue-700 focus:ring-2"
-              />
-              <label for="privateCheck" class="text-gray-700">Private Document</label>
+              <label for="privateCheck" class="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="privateCheck"
+                  name="private"
+                  [(ngModel)]="isPrivate"
+                  class="sr-only peer"
+                />
+                <div
+                  class="w-10 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600
+                         peer-focus:ring-4 peer-focus:ring-blue-300
+                         transition-colors"
+                ></div>
+                <div
+                  class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full
+                         shadow transform peer-checked:translate-x-4 transition-transform"
+                ></div>
+              </label>
+              <label for="privateCheck" class="text-sm text-gray-700 select-none">Private Document</label>
             </div>
+
+
 
             <button
               type="submit"

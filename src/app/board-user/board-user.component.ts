@@ -5,6 +5,7 @@ import { AuthService } from '../_services/auth.service';
 import { UserService } from '../_services/user.service';
 import { UserProfile } from '../models/user.model';
 import { PublicDocument, UserDocument, UserDocumentStats } from '../models/document.model';
+import { DocumentService } from '../_services/document.service';
 
 @Component({
   selector: 'app-chat',
@@ -49,6 +50,7 @@ export class BoardUserComponent implements OnInit {
 
   constructor(
     private convoService: ConversationService,
+    private documentService: DocumentService,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
@@ -72,6 +74,26 @@ export class BoardUserComponent implements OnInit {
     this.router.navigate(['/conversations']);
   }
 
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      this.file = event.dataTransfer.files[0];
+      event.dataTransfer.clearData();
+    }
+  }
+
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
     const selected = target.files && target.files[0];
@@ -87,7 +109,7 @@ export class BoardUserComponent implements OnInit {
 
     this.loading = true;
 
-    this.convoService.uploadDocument(this.file, this.formTitle, this.isPrivate).subscribe({
+    this.documentService.uploadDocument(this.file, this.formTitle, this.isPrivate).subscribe({
       next: (res: any) => {
         // res should contain the new conversation ID
         if (res) {
@@ -107,6 +129,7 @@ export class BoardUserComponent implements OnInit {
       },
       error: (err) => {
         console.error('Document upload failed', err);
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;

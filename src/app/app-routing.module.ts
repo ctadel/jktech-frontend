@@ -19,6 +19,7 @@ const routes: Routes = [
   { path: 'conversations', component: BoardUserComponent, canActivate:[authGuard]},
   { path: 'conversation/:id', component: BoardUserComponent, canActivate:[authGuard] },
   { path: 'documents', component: DocumentsComponent, canActivate:[authGuard] },
+  { path: 'document/:id', component: DocumentsComponent, canActivate:[authGuard] },
   { path: 'admin', component: BoardAdminComponent, canActivate:[authGuard, adminGuard]},
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
