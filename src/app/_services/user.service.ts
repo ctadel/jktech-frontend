@@ -51,4 +51,13 @@ export class UserService {
       headers: headers
     });
   }
+
+  fetchUserDocumentsStats(): Observable<any> {
+    const headers = this._get_header()
+    return this.http.get(BASE_URL + `/documents/stats`, {
+      responseType: 'json',
+      headers: headers
+    });
+  }
+
 }

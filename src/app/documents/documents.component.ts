@@ -8,11 +8,13 @@ import { UserService } from '../_services/user.service';
 })
 export class DocumentsComponent implements OnInit {
   userDocuments: any[] = [];
+  userDocumentStats: any[] = [];
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.loadUserDocuments();
+    this.loadUserDocumentsStatistics();
   }
 
   loadUserDocuments(): void {
@@ -21,4 +23,12 @@ export class DocumentsComponent implements OnInit {
       error: err => console.error('Failed to load user documents', err)
     });
   }
+
+  loadUserDocumentsStatistics(): void {
+    this.userService.fetchUserDocumentsStats().subscribe({
+      next: data => console.log(data),
+      error: err => console.error('Failed to load user documents', err)
+    });
+  }
+
 }

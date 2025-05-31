@@ -15,6 +15,7 @@ export class AppComponent {
 
   // UI Interaction
   isDropdownOpen = false;
+  isMobileMenuOpen = false;
 
   @ViewChild('dropdownRef', { static: false }) dropdownRef!: ElementRef;
 

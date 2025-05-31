@@ -1,21 +1,39 @@
 <nav class="bg-gray-900 text-white shadow-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
-      <!-- Left: Brand + Menu -->
-      <div class="flex items-center space-x-8">
+      <!-- Left: Brand + Buttons + Toggle -->
+      <div class="flex items-center space-x-6">
         <a routerLink="/" class="text-3xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 to-purple-400 text-transparent bg-clip-text">
           ctadel
         </a>
-        <a *ngIf="showAdminBoard" routerLink="/admin" class="superadmin-link p-2">SuperAdmin</a>
-        <div class="hidden md:flex items-center space-x-6">
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-4">
+          <a *ngIf="showAdminBoard"
+             routerLink="/admin"
+             class="bg-yellow-600 text-black px-3 py-1 rounded font-semibold hover:bg-yellow-400 transition">
+            SuperAdmin
+          </a>
           <a routerLink="/explore" class="hover:text-indigo-300 transition">Explore</a>
           <a *ngIf="isLoggedIn" routerLink="/conversations" class="hover:text-indigo-300 transition">Conversations</a>
           <a *ngIf="isLoggedIn" routerLink="/documents" class="hover:text-indigo-300 transition">Documents</a>
         </div>
+
+        <!-- Mobile Toggle -->
+        <button
+          class="text-white md:hidden focus:outline-none"
+          (click)="isMobileMenuOpen = !isMobileMenuOpen"
+          aria-label="Toggle menu"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
       </div>
 
-      <!-- Right: Login/Register OR Profile -->
-      <div class="flex items-center space-x-4">
+      <!-- Right: Auth/Profile -->
+      <div class="hidden md:flex items-center space-x-4">
         <ng-container *ngIf="!isLoggedIn; else loggedIn">
           <a routerLink="/auth" class="hover:text-indigo-300 transition font-medium">Login / Register</a>
         </ng-container>
@@ -50,10 +68,10 @@
                 </button>
               </div>
 
-              <a routerLink="/profile" class="block px-4 py-2 hover:bg-gray-100 text-sm flex items-center space-x-2">
+              <a routerLink="/profile" class="px-4 py-2 hover:bg-gray-100 text-sm flex items-center space-x-2">
                 <span>👤</span><span>Profile</span>
               </a>
-              <button (click)="logout()" class="block w-full text-left px-4 py-2 mb-1 text-red-600 hover:bg-red-50 text-sm flex items-center space-x-2">
+              <button (click)="logout()" class="w-full text-left px-4 py-2 mb-1 text-red-600 hover:bg-red-50 text-sm flex items-center space-x-2">
                 <span>🚪</span><span>Sign Out</span>
               </button>
             </div>
@@ -61,12 +79,33 @@
         </ng-template>
       </div>
     </div>
+
+    <!-- Mobile Menu -->
+    <div *ngIf="isMobileMenuOpen" class="md:hidden mt-2 space-y-2">
+      <div class="space-y-1">
+        <a *ngIf="showAdminBoard"
+           routerLink="/admin"
+           class="block px-4 py-2 bg-yellow-600 text-black rounded font-semibold hover:bg-yellow-400">
+          SuperAdmin
+        </a>
+        <a routerLink="/explore" class="block px-4 py-2 hover:bg-gray-800">Explore</a>
+        <a *ngIf="isLoggedIn" routerLink="/conversations" class="block px-4 py-2 hover:bg-gray-800">Conversations</a>
+        <a *ngIf="isLoggedIn" routerLink="/documents" class="block px-4 py-2 hover:bg-gray-800">Documents</a>
+      </div>
+
+      <ng-container *ngIf="!isLoggedIn; else mobileLoggedIn">
+        <a routerLink="/auth" class="block px-4 py-2 hover:bg-gray-800">Login / Register</a>
+      </ng-container>
+
+      <ng-template #mobileLoggedIn>
+        <a routerLink="/profile" class="block px-4 py-2 hover:bg-gray-800">👤 Profile</a>
+        <button (click)="logout()" class="block w-full text-left px-4 py-2 text-red-400 hover:bg-red-800">🚪 Sign Out</button>
+      </ng-template>
+    </div>
   </div>
 </nav>
 
-<div class="container">
-  <router-outlet></router-outlet>
-</div>
-<div class="container">
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <router-outlet></router-outlet>
 </div>
