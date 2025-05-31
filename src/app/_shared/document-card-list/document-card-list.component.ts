@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConversationService } from '../../_services/conversation.service'; // create this
-import { AuthService } from '../../_services/auth.service'; // to check login
+import { ConversationService } from '../../_services/conversation.service';
 
 @Component({
   selector: 'app-document-card-list',
@@ -10,20 +9,12 @@ import { AuthService } from '../../_services/auth.service'; // to check login
 })
 export class DocumentCardListComponent {
   @Input() documents: any[] = [];
-  @Input() sectionTitle: string = ''
-  isLoggedIn = false;
-  user: any = {};
+  @Input() user: any = {};
 
   constructor(
     private conversationService: ConversationService,
     private router: Router,
-    private authService: AuthService
   ) {}
-
-  ngOnInit() {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    this.user = this.authService.getLoggedInUser()
-  }
 
   toggleStar(doc: any) {
     console.log('NOT IMPLEMENTED: Star a document')

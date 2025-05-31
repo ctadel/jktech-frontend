@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
+import { AuthService } from '../_services/auth.service';
 
 @Component({
   selector: 'app-documents',
@@ -9,12 +10,14 @@ import { UserService } from '../_services/user.service';
 export class DocumentsComponent implements OnInit {
   userDocuments: any[] = [];
   userDocumentStats: any[] = [];
+  user: any = null
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadUserDocuments();
     this.loadUserDocumentsStatistics();
+    this.user = this.authService.getLoggedInUser()
   }
 
   loadUserDocuments(): void {
@@ -26,7 +29,7 @@ export class DocumentsComponent implements OnInit {
 
   loadUserDocumentsStatistics(): void {
     this.userService.fetchUserDocumentsStats().subscribe({
-      next: data => console.log(data),
+      next: data => this.userDocumentStats = data,
       error: err => console.error('Failed to load user documents', err)
     });
   }

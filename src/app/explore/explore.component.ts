@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
+import { AuthService } from '../_services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +11,13 @@ export class ExploreComponent implements OnInit {
   latestDocs: any[] = [];
   trendingDocs: any[] = [];
   mostLikedDocs: any[] = [];
+  user: any = {}
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadDocuments();
+    this.user = this.authService.getLoggedInUser()
   }
 
   loadDocuments(): void {

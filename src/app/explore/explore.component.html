@@ -1,7 +1,7 @@
 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-8 mt-10 border-b-2 border-blue-200 pb-1">Latest Documents</h1>
 <app-document-card-list
   [documents]="latestDocs"
-  sectionTitle="Latest Documents">
+  [user]="user">
 </app-document-card-list>
 
 <div class="bg-gray-100 rounded-xl shadow-md p-6 mt-6">
@@ -10,12 +10,12 @@
   </h1>
   <app-document-card-list
     [documents]="trendingDocs"
-    sectionTitle="Trending Documents">
+    [user]="user">
   </app-document-card-list>
 </div>
 
 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 border-b-2 border-blue-200 pb-1 mt-5">Most Queried Documents</h1>
 <app-document-card-list
   [documents]="mostLikedDocs"
-  sectionTitle="Most Queried Documents">
+  [user]="user">
 </app-document-card-list>
