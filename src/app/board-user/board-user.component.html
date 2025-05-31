@@ -4,25 +4,26 @@
   <aside
     class="w-[320px] min-w-[320px] bg-gray-100 text-gray-700 flex flex-col"
     style="height: calc(100vh - 64px)">
-    <!-- Show Ingest Button ONLY when in conversation/:id -->
-    <button
-      class="mt-10 font-semibold hover:text-sky-900"
-      (click)="goToIngest()"
-    >
-      <i class="fas fa-plus-circle mr-2"></i><br>Ingest a new document
-    </button>
 
+    <div class="mt-10 mb-10 flex flex-col">
+      <button
+        class="font-semibold hover:text-sky-900"
+        (click)="goToIngest()"
+      >
+        <i class="fas fa-plus-circle mr-2"></i><br>Ingest a new document
+      </button>
 
-    <div *ngIf="user && user.account_type === 'BASIC'" class="p-5 rounded-md shadow-sm">
-      <div class="flex items-center space-x-2 text-sm text-yellow-700">
-        <span><strong>{{ userDocumentStats?.total_documents }}</strong> / 3</span>
-      </div>
+      <div *ngIf="user && user.account_type === 'BASIC'" class="p-5 rounded-md shadow-sm">
+        <div class="flex items-center space-x-2 text-sm text-yellow-700">
+          <span><strong>{{ userDocumentStats?.total_documents }}</strong> / 3</span>
+        </div>
 
-      <div class="w-full bg-yellow-100 h-2 rounded-full overflow-hidden">
-        <div *ngIf="userDocumentStats"
-          class="bg-yellow-500 h-full transition-all duration-300"
-          [ngStyle]="{ width: (userDocumentStats.total_documents / 3 * 100) + '%' }"
-        ></div>
+        <div class="w-full bg-yellow-100 h-2 rounded-full overflow-hidden">
+          <div *ngIf="userDocumentStats"
+            class="bg-yellow-500 h-full transition-all duration-300"
+            [ngStyle]="{ width: (userDocumentStats.total_documents / 3 * 100) + '%' }"
+          ></div>
+        </div>
       </div>
     </div>
 
