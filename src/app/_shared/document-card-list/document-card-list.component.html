@@ -1,14 +1,13 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
 
-
-<div *ngFor="let doc of documents"
-     [class.user-owned]="doc.user_id === user?.id"
-     class="relative bg-white border border-gray-200 rounded-xl shadow-sm p-4 text-sm transition-all duration-200 ease-in-out hover:bg-gray-50">
+  <div *ngFor="let doc of documents"
+       [class.user-owned]="doc.user_id === user?.id"
+       class="relative bg-white border border-gray-200 rounded-xl shadow-sm p-4 text-sm transition-all duration-200 ease-in-out hover:bg-gray-50">
 
     <!-- Manage Button -->
     <div *ngIf="user?.id === doc.user_id">
       <button class="absolute top-2 right-2 text-xs text-blue-600">
-        ⚙️
+        <i class="fas fa-cog"></i>
       </button>
     </div>
 
@@ -21,32 +20,33 @@
 
       <!-- Views -->
       <span class="flex items-center gap-1">
-        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 4.5c-4.5 0-8.29 2.91-10 7.5 1.71 4.59 5.5 7.5 10 7.5s8.29-2.91 10-7.5c-1.71-4.59-5.5-7.5-10-7.5zm0 12a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/>
-          <circle cx="12" cy="12" r="2.5" fill="white"/>
-        </svg>
+        <i class="fas fa-eye text-gray-400"></i>
         {{ doc.views }}
       </span>
 
       <!-- Stars -->
       <span class="flex items-center gap-1">
-        <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.561-.955L10 0l2.951 5.955 6.561.955-4.756 4.635 1.122 6.545z" />
-        </svg>
+        <i class="fas fa-star text-yellow-400"></i>
         {{ doc.stars }}
       </span>
+    </div>
+
+    <!-- Version Label -->
+    <div class="absolute bottom-2 left-2 text-xs text-gray-400">
+      <i class="fas fa-sync-alt text-blue-500 mr-1"></i> v{{ doc.version }}
     </div>
 
     <!-- Action Buttons -->
     <div class="absolute bottom-2 right-2 flex gap-2">
       <button (click)="startChat(doc)"
               class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-blue-300 transition text-xs">
-        💬
+        <i class="fas fa-comment-dots mr-1"></i> Chat
       </button>
       <button (click)="toggleStar(doc)"
               class="px-3 py-1 rounded border border-yellow-300 text-yellow-600 hover:text-blue-600 hover:bg-yellow-50 transition text-xs">
-        ⭐
+        <i class="fas fa-star mr-1"></i>
       </button>
     </div>
   </div>
+
 </div>
