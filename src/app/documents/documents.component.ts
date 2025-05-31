@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
 import { AuthService } from '../_services/auth.service';
+import { UserDocument, UserDocumentStats } from '../models/document.model';
+import { UserProfile } from '../models/user.model';
 
 @Component({
   selector: 'app-documents',
@@ -8,9 +10,9 @@ import { AuthService } from '../_services/auth.service';
   styleUrl: './documents.component.css'
 })
 export class DocumentsComponent implements OnInit {
-  userDocuments: any[] = [];
-  userDocumentStats: any[] = [];
-  user: any = null
+  userDocuments: UserDocument[] = []
+  userDocumentStats: UserDocumentStats | null = null
+  user: UserProfile | null = null
 
   constructor(private userService: UserService, private authService: AuthService) { }
 
@@ -23,14 +25,18 @@ export class DocumentsComponent implements OnInit {
   loadUserDocuments(): void {
     this.userService.fetchUserDocuments().subscribe({
       next: data => this.userDocuments = data,
-      error: err => console.error('Failed to load user documents', err)
+      error: err => {
+        console.error('Failed to load user documents', err)
+      }
     });
   }
 
   loadUserDocumentsStatistics(): void {
     this.userService.fetchUserDocumentsStats().subscribe({
       next: data => this.userDocumentStats = data,
-      error: err => console.error('Failed to load user documents', err)
+      error: err => {
+        console.error('Failed to load user documents', err)
+      }
     });
   }
 

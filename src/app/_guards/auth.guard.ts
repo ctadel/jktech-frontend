@@ -16,9 +16,10 @@ export const authGuard: CanActivateFn = (route, state) => {
 export const adminGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  const user = authService.getLoggedInUser();
 
   if (!authService.isLoggedIn() ||
-      (authService.getLoggedInUser()['account_type'] !='MODERATOR')) {
+      (user && user['account_type'] !== 'MODERATOR')) {
     router.navigate(['']);
     return false;
   }

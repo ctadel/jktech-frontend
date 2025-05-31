@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import { UserProfile } from '../models/user.model';
+import { PublicDocument, UserDocument, UserDocumentStats } from '../models/document.model';
 import { BASE_URL } from './api.service';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,31 +30,31 @@ export class UserService {
   }
 
   // based on top views
-  fetchExplore(): Observable<any> {
-    return this.http.get(BASE_URL + '/documents/public/explore', { responseType: 'json' });
+  fetchExplore(): Observable<PublicDocument[]> {
+    return this.http.get<PublicDocument[]>(BASE_URL + '/documents/public/explore', { responseType: 'json' });
   }
 
   // based on upload date
-  fetchLatestDocuments(): Observable<any> {
-    return this.http.get(BASE_URL + '/documents/public/explore/latest', { responseType: 'json' });
+  fetchLatestDocuments(): Observable<PublicDocument[]> {
+    return this.http.get<PublicDocument[]>(BASE_URL + '/documents/public/explore/latest', { responseType: 'json' });
   }
 
   // based on top stars
-  fetchTrendingDocuments(): Observable<any> {
-    return this.http.get(BASE_URL + '/documents/public/explore/trending', { responseType: 'json' });
+  fetchTrendingDocuments(): Observable<PublicDocument[]> {
+    return this.http.get<PublicDocument[]>(BASE_URL + '/documents/public/explore/trending', { responseType: 'json' });
   }
 
-  fetchUserDocuments(): Observable<any> {
+  fetchUserDocuments(): Observable<UserDocument[]> {
     const headers = this._get_header()
-    return this.http.get(BASE_URL + `/documents`, {
+    return this.http.get<UserDocument[]>(BASE_URL + `/documents`, {
       responseType: 'json',
       headers: headers
     });
   }
 
-  fetchUserDocumentsStats(): Observable<any> {
+  fetchUserDocumentsStats(): Observable<UserDocumentStats> {
     const headers = this._get_header()
-    return this.http.get(BASE_URL + `/documents/stats`, {
+    return this.http.get<UserDocumentStats>(BASE_URL + `/documents/stats`, {
       responseType: 'json',
       headers: headers
     });

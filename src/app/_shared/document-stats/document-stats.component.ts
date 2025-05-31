@@ -10,10 +10,16 @@ export class DocumentStatsComponent {
   @Input() user: any
 
   get publicDocuments() {
-    return this.stats.total_documents - this.stats.private_documents;
+    if (this.stats){
+        return this.stats.total_documents - this.stats.private_documents;
+    }
+    return 0
   }
 
   get privatePercentage() {
+    if (!this.stats){
+      return 0
+    }
     return this.stats.total_documents
       ? (this.stats.private_documents / this.stats.total_documents) * 100
       : 0;

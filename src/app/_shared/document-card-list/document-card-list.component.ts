@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConversationService } from '../../_services/conversation.service';
+import { PublicDocument, UserDocument } from '../../models/document.model';
+import { UserProfile } from '../../models/user.model';
 
 @Component({
   selector: 'app-document-card-list',
@@ -8,8 +10,8 @@ import { ConversationService } from '../../_services/conversation.service';
   styleUrls: ['./document-card-list.component.css']
 })
 export class DocumentCardListComponent {
-  @Input() documents: any[] = [];
-  @Input() user: any = {};
+  @Input() documents: PublicDocument[] | UserDocument[]= [];
+  @Input() user: UserProfile | null = null;
 
   constructor(
     private conversationService: ConversationService,

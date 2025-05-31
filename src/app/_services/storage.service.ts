@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UserProfile } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,12 +34,12 @@ export class StorageService {
     return false;
   }
 
-  public getLoggedInUser(): any {
-    let user = window.sessionStorage.getItem(this.USER_KEY)
-    if (user) {
-      user = JSON.parse(user)
-      return user
+  public getLoggedInUser(): UserProfile | null {
+    const userStr = window.sessionStorage.getItem(this.USER_KEY);
+    if (userStr) {
+      const user = JSON.parse(userStr) as UserProfile;
+      return user;
     }
-    return null
+    return null;
   }
 }

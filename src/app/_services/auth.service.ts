@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 import { BASE_URL } from './api.service';
+import { UserProfile } from '../models/user.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -18,8 +19,12 @@ export class AuthService {
     return this.storage.isLoggedIn()
   }
 
-  getLoggedInUser() {
-    return this.storage.getLoggedInUser()
+  getLoggedInUser(): UserProfile | null{
+    const user = this.storage.getLoggedInUser()
+    if (!user){
+      console.log("The user session has been deleted, forcing re-login")
+    }
+    return user
   }
 
   login(username: string, password: string): Observable<any> {
@@ -44,5 +49,10 @@ export class AuthService {
       },
       httpOptions
     );
+  }
+
+  logout(): void {
+    this.storage.clean();
+    window.location.reload();
   }
 }

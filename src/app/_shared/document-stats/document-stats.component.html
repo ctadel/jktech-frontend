@@ -3,16 +3,16 @@
 
 
   <!-- Basic Plan Usage Alert -->
-  <div *ngIf="user.account_type === 'BASIC'" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md shadow-sm">
+  <div *ngIf="user && user.account_type === 'BASIC'" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md shadow-sm">
     <div class="flex items-center space-x-2 text-sm text-yellow-700">
       <span class="font-medium">Document Usage:</span>
-      <span>You have used <strong>{{ stats.total_documents }}</strong> out of 3 allowed documents.</span>
+      <span>You have ingested <strong>{{ stats && stats.total_documents }}</strong> out of 3 allowed ingestions.</span>
     </div>
 
     <div class="w-full mt-2 bg-yellow-100 h-2 rounded-full overflow-hidden">
       <div
         class="bg-yellow-500 h-full transition-all duration-300"
-        [ngStyle]="{ width: (stats.total_documents / 3 * 100) + '%' }"
+        [ngStyle]="{ width: (stats?.total_documents / 3 * 100) + '%' }"
       ></div>
     </div>
   </div>
@@ -32,29 +32,29 @@
 
     <div class="flex justify-between text-xs text-gray-500 mt-1">
       <span class="text-green-600">🟩 Public ({{ publicDocuments }})</span>
-      <span class="text-yellow-600">🟨 Private ({{ stats.private_documents }})</span>
+      <span class="text-yellow-600">🟨 Private ({{ stats && stats.private_documents }})</span>
     </div>
   </div>
 
   <!-- Stats Grid -->
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 text-center">
     <div class="bg-gray-100 rounded-lg p-4">
-      <div class="text-lg font-semibold text-indigo-600">{{ stats.total_documents }}</div>
+      <div class="text-lg font-semibold text-indigo-600">{{ stats && stats.total_documents }}</div>
       <div class="text-sm text-gray-600">Total Documents</div>
     </div>
 
     <div class="bg-gray-100 rounded-lg p-4">
-      <div class="text-lg font-semibold text-blue-600">{{ stats.total_views }}</div>
+      <div class="text-lg font-semibold text-blue-600">{{ stats && stats.total_views }}</div>
       <div class="text-sm text-gray-600">Total Views</div>
     </div>
 
     <div class="bg-gray-100 rounded-lg p-4">
-      <div class="text-lg font-semibold text-yellow-600">{{ stats.total_stars }}</div>
+      <div class="text-lg font-semibold text-yellow-600">{{ stats && stats.total_stars }}</div>
       <div class="text-sm text-gray-600">Total Stars</div>
     </div>
 
     <div class="bg-gray-100 rounded-lg p-4">
-      <div class="text-lg font-semibold text-pink-600">{{ stats.total_revisions }}</div>
+      <div class="text-lg font-semibold text-pink-600">{{ stats && stats.total_revisions }}</div>
       <div class="text-sm text-gray-600">Revisions</div>
     </div>
   </div>

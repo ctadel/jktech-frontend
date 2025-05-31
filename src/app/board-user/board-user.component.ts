@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationService } from '../_services/conversation.service';
+import { AuthService } from '../_services/auth.service';
+import { UserService } from '../_services/user.service';
+import { UserProfile } from '../models/user.model';
+import { PublicDocument, UserDocument, UserDocumentStats } from '../models/document.model';
 
 @Component({
   selector: 'app-chat',
@@ -8,6 +12,8 @@ import { ConversationService } from '../_services/conversation.service';
   styleUrls: ['./board-user.component.css']
 })
 export class BoardUserComponent implements OnInit {
+  userDocumentStats: UserDocumentStats | null = null
+  user: any = {}
   conversations: any[] = [];
   selectedConversation: any = null;
   messages: any[] = [];
@@ -44,11 +50,22 @@ export class BoardUserComponent implements OnInit {
   constructor(
     private convoService: ConversationService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
     this.loadConversations();
+    this.user = this.authService.getLoggedInUser()
+    this.loadUserDocumentsStatistics()
+  }
+
+  loadUserDocumentsStatistics(): void {
+    this.userService.fetchUserDocumentsStats().subscribe({
+      next: data => this.userDocumentStats = data,
+      error: err => console.error('Failed to load user documents', err)
+    });
   }
 
   goToIngest(): void {
