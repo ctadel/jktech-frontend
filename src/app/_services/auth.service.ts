@@ -6,6 +6,8 @@ import { BASE_URL } from './api.service';
 import { UserProfile } from '../models/user.model';
 import { EventBusService } from '../_shared/event-bus.service';
 import { EventData } from '../_shared/event.class';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -15,7 +17,13 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient, private storage: StorageService, private ebs: EventBusService) {}
+  constructor(
+    private http: HttpClient,
+    private storage: StorageService,
+    private ebs: EventBusService,
+    private toastr: ToastrService,
+    private router: Router
+  ) {}
 
   isLoggedIn(){
     return this.storage.isLoggedIn()
@@ -24,7 +32,9 @@ export class AuthService {
   getLoggedInUser(): UserProfile | null{
     const user = this.storage.getLoggedInUser()
     if (!user){
-      console.log("The user session has been deleted, forcing re-login")
+      this.toastr.warning("The user session has been deleted, forcing re-login")
+      this.logout()
+      this.router.navigate(['/auth'])
     }
     return user
   }

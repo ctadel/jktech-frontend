@@ -1,18 +1,12 @@
-<div class="container">
-  <header class="jumbotron">
-    <h1>Manage Users</h1>
-    <app-data-table
-      [columns]="columns"
-      [data]="users"
-      [loading]="isLoading"
-      [page]="page"
-      [hasMore]="hasMore"
-      (nextPage)="loadUsers($event)"
-      (prevPage)="loadUsers($event)"
-      (firstPage)="loadUsers(1)"
-      (addNew)="onAddUser()"
-      (editRow)="onEditUser($event)"
-      (deleteRow)="onDeleteUser($event)"
-    ></app-data-table>
-  </header>
+<p *ngIf="!users.length">No data loaded yet...</p>
+
+
+<h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-8 mt-10 border-b-2 border-blue-200 pb-1">Users</h1>
+
+<div class="h-80 px-4">
+  <app-data-table
+    [rowData]="users"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef">
+  </app-data-table>
 </div>
