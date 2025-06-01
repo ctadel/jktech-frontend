@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
     this.userService.updateUserProfile(fullName, email)
         .subscribe({
         next: response => {
-          this.toastr.show("User Profile", "Your profile has been updated and applied")
+          this.toastr.info("Your profile has been updated and applied", "User Profile")
           this.userService.getUserProfile().subscribe(profile => {
             this.authService.hotReload(profile)
           });

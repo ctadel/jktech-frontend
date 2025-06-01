@@ -13,9 +13,6 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   isLoggedIn = false;
-  showAdminBoard = false;
-
-  // UI Interaction
   isDropdownOpen = false;
   isMobileMenuOpen = false;
 
@@ -34,8 +31,6 @@ export class AppComponent {
 
   user: UserProfile | any = null
 
-  eventBusSub?: Subscription;
-
   constructor(
     private authService: AuthService,
     private eventBusService: EventBusService,
@@ -43,20 +38,16 @@ export class AppComponent {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    this.userService.getUserProfile().subscribe(profile => this.user = profile)
-    this.showAdminBoard = (this.user && this.user.account_type == 'MODERATOR')
-
+  ngOnInit() {
+    this.isLoggedIn = this.authService.isLoggedIn()
+    this.userService.getUserProfile().subscribe(user => {
+      this.user = user;
+    })
     this.eventBusService.on('profile-updated', (profile: UserProfile) => {
       this.user = profile;
-      this.showAdminBoard = profile.account_type === 'MODERATOR';
     });
+  }
 
-  }
-  ngOnDestroy(): void {
-    this.eventBusSub?.unsubscribe();
-  }
 
   logout(): void {
     this.authService.logout();

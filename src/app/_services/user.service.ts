@@ -13,7 +13,6 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private storageService: StorageService,
-    private router: Router
   ) {}
 
   _get_header() {
@@ -23,23 +22,6 @@ export class UserService {
     });
     return header
   }
-
-  hotReload(): void {
-    this.getUserProfile().subscribe({
-      next: user => {
-        this.storageService.deleteUserProfile()
-        this.storageService.saveItem(this.storageService.USER_KEY, user);
-        const currentUrl = this.router.url;
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate([currentUrl]);
-        });
-      },
-      error: err => {
-        console.error('Failed to fetch user profile:', err);
-      }
-    });
-  }
-
 
   getUserProfile(): Observable<UserProfile> {
     const headers = this._get_header();

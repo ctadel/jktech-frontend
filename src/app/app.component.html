@@ -9,7 +9,7 @@
 
         <!-- Desktop Menu -->
         <div class="hidden md:flex items-center space-x-4">
-          <a *ngIf="showAdminBoard"
+          <a *ngIf="user && user.account_type === 'MODERATOR'"
              routerLink="/admin"
              class="bg-yellow-600 text-black px-3 py-1 rounded font-semibold hover:bg-yellow-400 transition">
             SuperAdmin
@@ -83,7 +83,7 @@
     <!-- Mobile Menu -->
     <div *ngIf="isMobileMenuOpen" class="md:hidden mt-2 space-y-2">
       <div class="space-y-1">
-        <a *ngIf="showAdminBoard"
+        <a *ngIf="user && user.account_type === 'MODERATOR'"
            routerLink="/admin"
            class="block px-4 py-2 bg-yellow-600 text-black rounded font-semibold hover:bg-yellow-400">
           SuperAdmin
