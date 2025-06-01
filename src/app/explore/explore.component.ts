@@ -24,7 +24,7 @@ export class ExploreComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.user = this.authService.getLoggedInUser()
+    this.user = this.authService.getLoggedInUser(true);
     this.eventBusService.on('profile-updated', (profile: any) => {
       this.user = profile;
     });

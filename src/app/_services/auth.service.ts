@@ -29,12 +29,14 @@ export class AuthService {
     return this.storage.isLoggedIn()
   }
 
-  getLoggedInUser(): UserProfile | null{
+  getLoggedInUser(safe_return: boolean = false): UserProfile | null{
     const user = this.storage.getLoggedInUser()
+    if (safe_return) return user
     if (!user){
       this.toastr.warning("The user session has been deleted, forcing re-login")
       this.logout()
       this.router.navigate(['/auth'])
+      return null
     }
     return user
   }
