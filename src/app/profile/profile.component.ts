@@ -7,6 +7,7 @@ import { EventBusService } from '../_shared/event-bus.service';
 import { StorageService } from '../_services/storage.service';
 import { UserProfile } from '../models/user.model';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile',
@@ -83,9 +84,8 @@ export class ProfileComponent implements OnInit {
 
     this.userService.updateAccountType(targetProfile).subscribe({
         next: response => {
-          this.user.account_type = targetProfile
           this.userService.getUserProfile().subscribe(profile => {
-            this.toastr.success("Subscription Updated", `You are now a ${targetProfile} user`)
+            this.toastr.success(`You are now a ${targetProfile} user`, `Subscription Updated`)
             this.authService.hotReload(profile)
           });
         },
@@ -95,7 +95,51 @@ export class ProfileComponent implements OnInit {
       })
   }
 
+  revokeModeratorAccess(): void {
+    this.userService.updateAccountType('PREMIUM').subscribe({
+        next: response => {
+          this.userService.getUserProfile().subscribe(profile => {
+            this.toastr.success("Back to earth, feel better!", `Subscription Updated`)
+            this.authService.hotReload(profile)
+          });
+        },
+        error: err => {
+          this.toastr.error(err, "Upgrade Error")
+        }
+      })
+  }
+
+  requestModeratorAccess(): void {
+    this.userService.updateAccountType('MODERATOR').subscribe({
+        next: response => {
+          this.userService.getUserProfile().subscribe(profile => {
+            this.toastr.success("You are now a SUPERMAN", `Subscription Updated`)
+            this.authService.hotReload(profile)
+          });
+        },
+        error: err => {
+          this.toastr.error(err, "Upgrade Error")
+        }
+      })
+  }
+
   onDeleteAccount() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to delete your account permanently.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result:any) => {
+        if (result.isConfirmed) {
+          this._DeleteAccount();
+        }
+      });
+  }
+
+  _DeleteAccount() {
     this.userService.deleteAccount().subscribe({
         next: response => {
           this.toastr.show("Your profile is deleted")

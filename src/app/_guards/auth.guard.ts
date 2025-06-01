@@ -31,7 +31,7 @@ export const antiAuthGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   if (authService.isLoggedIn()) {
-    router.navigate(['/conversations']);
+    router.navigate(['/documents']);
     return false;
   }
   return true;

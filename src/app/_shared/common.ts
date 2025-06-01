@@ -6,6 +6,6 @@ export const TOAST_CONFIG: Partial<GlobalConfig> = {
   closeButton: true,
   progressBar: true,
   progressAnimation: 'decreasing',
-  preventDuplicates: true,
-  countDuplicates: true
+  preventDuplicates: false,
+  countDuplicates: false
 };
