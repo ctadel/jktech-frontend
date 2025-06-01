@@ -16,6 +16,10 @@ import { httpInterceptorProviders } from './_helpers/http.interceptor';
 import { HomepageComponent } from './homepage/homepage.component';
 import { DocumentsComponent } from './documents/documents.component';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { TOAST_CONFIG } from './_shared/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +37,8 @@ import { DocumentsComponent } from './documents/documents.component';
     FormsModule,
     HttpClientModule,
     SharedModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(TOAST_CONFIG),
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

@@ -4,6 +4,7 @@ import { ConversationService } from '../../_services/conversation.service';
 import { PublicDocument, UserDocument } from '../../models/document.model';
 import { UserProfile } from '../../models/user.model';
 import { DocumentService } from '../../_services/document.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-document-card-list',
@@ -18,9 +19,14 @@ export class DocumentCardListComponent {
     private conversationService: ConversationService,
     private documentService: DocumentService,
     private router: Router,
+    private toastr: ToastrService
   ) {}
 
   toggleStar(document: any) {
+    if (!this.user){
+      this.toastr.info("Login to enjoy conversations", "Authentication")
+      return
+    }
     if (document.user_starred) {
       this.documentService.unStarDocument(document.id).subscribe({
         next: () => {
@@ -47,12 +53,16 @@ export class DocumentCardListComponent {
   }
 
   startChat(doc: any) {
+    if (!this.user){
+      this.toastr.info("Login to enjoy conversations", "Authentication")
+      return
+    }
     this.conversationService.startConversation(doc.id, doc.title).subscribe({
       next: (res) => {
         const conversationId = res.id;
         this.router.navigate([`/conversation/${conversationId}`]);
       },
-      error: err => console.error('Failed to start conversation', err)
+      error: err => this.toastr.error('Failed to start conversation', err)
     });
   }
 

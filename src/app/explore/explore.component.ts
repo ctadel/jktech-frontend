@@ -3,6 +3,7 @@ import { AuthService } from '../_services/auth.service';
 import { UserProfile } from '../models/user.model';
 import { DocumentService } from '../_services/document.service';
 import { EventBusService } from '../_shared/event-bus.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +19,8 @@ export class ExploreComponent implements OnInit {
   constructor(
     private docService: DocumentService,
     private authService: AuthService,
-    private eventBusService: EventBusService
+    private eventBusService: EventBusService,
+    private toastr:ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -38,17 +40,17 @@ export class ExploreComponent implements OnInit {
 
     this.docService.fetchLatestDocuments(user).subscribe({
       next: data => this.latestDocs = data.slice(0, 8),
-      error: err => console.error('Failed to load latest docs', err)
+      error: err => this.toastr.error('Failed to load latest docs', err)
     });
 
     this.docService.fetchTrendingDocuments(user).subscribe({
       next: data => this.trendingDocs = data.slice(0, 4),
-      error: err => console.error('Failed to load trending docs', err)
+      error: err => this.toastr.error('Failed to load trending docs', err)
     });
 
     this.docService.fetchExplore(user).subscribe({
       next: data => this.mostLikedDocs = data.slice(0, 8),
-      error: err => console.error('Failed to load most liked docs', err)
+      error: err => this.toastr.error('Failed to load most liked docs', err)
     });
   }
 }

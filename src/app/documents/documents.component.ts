@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../_services/user.service';
 import { AuthService } from '../_services/auth.service';
 import { Router } from '@angular/router';
 import { UserDocument, UserDocumentStats } from '../models/document.model';
@@ -8,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { DocumentService } from '../_services/document.service';
 import { EventBusService } from '../_shared/event-bus.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-documents',
@@ -66,7 +66,8 @@ export class DocumentsComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private router: Router,
-    private eventBusService: EventBusService
+    private eventBusService: EventBusService,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -102,7 +103,7 @@ export class DocumentsComponent implements OnInit {
       },
       error: err => {
         this.viewMode = '404'
-        console.error('Failed to load user documents', err)
+        this.toastr.error('Failed to load user documents', err)
       }
     });
   }
@@ -111,7 +112,7 @@ export class DocumentsComponent implements OnInit {
     this.documentService.fetchUserDocuments().subscribe({
       next: data => this.userDocuments = data,
       error: err => {
-        console.error('Failed to load user documents', err)
+        this.toastr.error('Failed to load user documents', err)
       }
     });
   }
@@ -120,7 +121,7 @@ export class DocumentsComponent implements OnInit {
     this.documentService.fetchUserDocumentsStats().subscribe({
       next: data => this.userDocumentStats = data,
       error: err => {
-        console.error('Failed to load user documents', err)
+        this.toastr.error('Failed to load user documents', err)
       }
     });
   }
@@ -129,16 +130,17 @@ export class DocumentsComponent implements OnInit {
   deleteDocument(document_key: string){
     this.documentService.deleteDocument(document_key).subscribe({
       next: (res: any) => {
+        this.toastr.success('Document was deleted successfully', "Document Deletion");
         this.goBack()
       },
       error: (err) => {
-        console.error('Document upload failed', err);
+        this.toastr.error('Document upload failed', err);
       }
     });
   }
 
   navigateToUpgrade(){
-
+    this.router.navigate(['/profile'])
   }
 
   reuploadDocument(document_key: string): void{
@@ -149,10 +151,11 @@ export class DocumentsComponent implements OnInit {
     ).subscribe({
       next: (res: any) => {
           console.log('File uploaded', res)
+          this.toastr.success("Document was re-ingested successfully, Click on chat to start communicating", "Ingestion")
           this.router.navigate(['/documents'])
         },
       error: (err) => {
-        console.error('Document upload failed', err);
+        this.toastr.error('Document upload failed', err);
         this.upload_in_progress = false;
       },
       complete: () => {
@@ -171,7 +174,7 @@ export class DocumentsComponent implements OnInit {
             document.total_stars -= 1;
           }
         },
-        error: err => console.error('Failed to unstar document', err)
+        error: err => this.toastr.error('Failed to unstar document', err)
       });
     } else {
       this.documentService.starDocument(document.id).subscribe({
@@ -183,10 +186,12 @@ export class DocumentsComponent implements OnInit {
             document.total_stars = 1;
           }
         },
-        error: err => console.error('Failed to star document', err)
+        error: err => this.toastr.error('Failed to star document', err)
       });
     }
   }
 
-
+  initiateChat(document: any): void {
+    this.router.navigate([`/conversation/${document.document_key}`])
+  }
 }

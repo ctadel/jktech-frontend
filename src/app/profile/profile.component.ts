@@ -6,6 +6,7 @@ import { EventData } from '../_shared/event.class';
 import { EventBusService } from '../_shared/event-bus.service';
 import { StorageService } from '../_services/storage.service';
 import { UserProfile } from '../models/user.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile',
@@ -19,7 +20,9 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService,
     private storageService: StorageService,
     private userService: UserService,
-    private eventBusService: EventBusService
+    private eventBusService: EventBusService,
+    private router: Router,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -45,12 +48,13 @@ export class ProfileComponent implements OnInit {
     this.userService.updateUserProfile(fullName, email)
         .subscribe({
         next: response => {
+          this.toastr.show("User Profile", "Your profile has been updated and applied")
           this.userService.getUserProfile().subscribe(profile => {
             this.authService.hotReload(profile)
           });
         },
         error: err => {
-          console.log(err)
+          this.toastr.error("User Profile", err)
         }
       })
   }
@@ -63,6 +67,7 @@ export class ProfileComponent implements OnInit {
               this.storageService.saveItem(this.storageService.TOKEN_KEY, token);
               this.userService.getUserProfile().subscribe( profile => {
                 this.authService.hotReload(profile)
+                this.toastr.show("User Profile", "Your password was updated successfully")
               })
           })
       })
@@ -80,11 +85,12 @@ export class ProfileComponent implements OnInit {
         next: response => {
           this.user.account_type = targetProfile
           this.userService.getUserProfile().subscribe(profile => {
+            this.toastr.success("Subscription Updated", `You are now a ${targetProfile} user`)
             this.authService.hotReload(profile)
           });
         },
         error: err => {
-          console.log(err)
+          this.toastr.error("Upgrade Error", err)
         }
       })
   }
@@ -92,10 +98,13 @@ export class ProfileComponent implements OnInit {
   onDeleteAccount() {
     this.userService.deleteAccount().subscribe({
         next: response => {
-          console.log(response)
+          this.toastr.show("Your profile is deleted")
+          this.storageService.deleteUserProfile()
+          this.storageService.removeAccessToken()
+          this.router.navigate(['/auth'])
         },
         error: err => {
-          console.log(err)
+          this.toastr.error("Account Deletion", err)
         }
       })
   }

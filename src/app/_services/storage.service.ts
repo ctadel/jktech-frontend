@@ -38,6 +38,10 @@ export class StorageService {
     window.sessionStorage.removeItem(this.USER_KEY);
   }
 
+  public removeAccessToken(): void {
+    window.sessionStorage.removeItem(this.TOKEN_KEY);
+  }
+
   public getLoggedInUser(): UserProfile | null {
     const userStr = window.sessionStorage.getItem(this.USER_KEY);
     if (userStr) {

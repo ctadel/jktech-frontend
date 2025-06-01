@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { UserService } from '../_services/user.service';
 import { StorageService } from '../_services/storage.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-auth',
@@ -32,7 +33,8 @@ export class AuthComponent {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private toastr: ToastrService,
   ) {}
 
   onLogin(): void {
@@ -51,7 +53,7 @@ export class AuthComponent {
             this.reloadPage();
           },
           error: err => {
-            console.error('Failed to fetch user profile:', err);
+            this.toastr.error('Failed to fetch user profile:', err);
             this.loginErrorMessage = 'Login succeeded but failed to fetch user info.';
             this.isLoginFailed = true;
           }

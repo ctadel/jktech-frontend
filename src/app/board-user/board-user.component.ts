@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationService } from '../_services/conversation.service';
 import { AuthService } from '../_services/auth.service';
-import { UserService } from '../_services/user.service';
-import { PublicDocument, UserDocument, UserDocumentStats } from '../models/document.model';
+import { UserDocumentStats } from '../models/document.model';
 import { DocumentService } from '../_services/document.service';
 import { EventBusService } from '../_shared/event-bus.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-chat',
@@ -40,7 +40,7 @@ export class BoardUserComponent implements OnInit {
           this.newMessage = '';
           this.messages.push({ role: 'AI', content: conv.content, created_at: conv.created_at });
         }, error: (err: any) => {
-          console.log(err)
+          this.toastr.error("Error sending Message", err)
         },
         complete: () => {
           this.loading = false;
@@ -55,6 +55,7 @@ export class BoardUserComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private eventBusService: EventBusService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -69,7 +70,7 @@ export class BoardUserComponent implements OnInit {
   loadUserDocumentsStatistics(): void {
     this.documentService.fetchUserDocumentsStats().subscribe({
       next: data => this.userDocumentStats = data,
-      error: err => console.error('Failed to load user documents', err)
+      error: err => this.toastr.error('Failed to load user documents', err)
     });
   }
 
@@ -119,19 +120,20 @@ export class BoardUserComponent implements OnInit {
           this.convoService.startConversation(res.id, res.title).subscribe({
             next: (conv: any) => {
               this.loadConversations();
+              this.toastr.success("Have fun with it", "Conversation initiated")
               this.router.navigate(['/conversation/', conv.id]);
             },
             error: (err) => {
-              console.log("failed to start a conversation", err)
+              this.toastr.error("Failed to start a conversation", err)
             }
 
           })
         } else {
-          console.log('Upload succeeded but no conversation returned.');
+          this.toastr.warning('Upload succeeded but no conversation returned.');
         }
       },
       error: (err) => {
-        console.error('Document upload failed', err);
+        this.toastr.error('Document upload failed', err);
         this.loading = false;
       },
       complete: () => {
@@ -172,6 +174,7 @@ export class BoardUserComponent implements OnInit {
   deleteConversation(event: Event, convoId: string): void {
     event.stopPropagation();
     this.convoService.deleteConversation(convoId).subscribe(() => {
+    this.toastr.success("Your conversation was successfully deleted", "Conversation")
       this.conversations = this.conversations.filter(c => c.id !== convoId);
       if (this.selectedConversation?.id === convoId) {
         this.selectedConversation = null;
@@ -208,11 +211,11 @@ export class BoardUserComponent implements OnInit {
         if (matchedDoc) {
           this.router.navigate(['/document', matchedDoc.document_key]);
         } else {
-          console.warn('Document not found with id:', document_id);
+          this.toastr.warning('Document not found with id:', `${document_id}`);
         }
       },
       error: err => {
-        console.error('Failed to load user documents', err);
+        this.toastr.error('Failed to load user documents', err);
       }
     })
   }
