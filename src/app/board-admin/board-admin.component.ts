@@ -18,7 +18,7 @@ export class BoardAdminComponent implements OnInit {
   users: any[] = [];
   documents: any[] = [];
 
-  columnDefs = [
+  userColumnDefs = [
     { headerName: 'ID', field: 'id', width: 60 },
     {
       headerName: 'Active',
@@ -76,6 +76,35 @@ export class BoardAdminComponent implements OnInit {
     },
 
     { headerName: 'Created At', field: 'created_at' },
+  ];
+
+  documentColumnDefs = [
+    { headerName: 'ID', field: 'id', width: 60 },
+    { headerName: 'Document Key', field: 'document_key', width: 200 },
+    { headerName: 'Title', field: 'title' },
+    { headerName: 'Version', field: 'version', width: 80 },
+    {
+      headerName: 'Private',
+      field: 'is_private_document',
+      width: 100,
+      cellRenderer: (params: any) => params.data.is_private_document ? 'Yes' : 'No'
+    },
+    { headerName: 'Views', field: 'views', width: 80 },
+    { headerName: 'User ID', field: 'user_id', width: 100 },
+    { headerName: 'File Path', field: 'file_path' },
+    {
+      headerName: 'Uploaded At',
+      field: 'uploaded_at',
+      width: 180,
+      valueFormatter: (params: any) => new Date(params.value).toLocaleString()
+    },
+    {
+      headerName: 'Active',
+      field: 'is_active',
+      width: 80,
+      cellRenderer: (params: any) => params.data.is_active ? 'Yes' : 'No'
+    },
+    { headerName: 'Ingestion Status', field: 'ingestion_status', width: 150 }
   ];
 
   defaultColDef = {
