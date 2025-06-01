@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, window } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import { UserProfile } from '../models/user.model';
-import { PublicDocument, UserDocument, UserDocumentStats } from '../models/document.model';
 import { BASE_URL } from './api.service';
 import { Router } from '@angular/router';
 

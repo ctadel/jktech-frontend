@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 import { BASE_URL } from './api.service';
 import { UserProfile } from '../models/user.model';
+import { EventBusService } from '../_shared/event-bus.service';
+import { EventData } from '../_shared/event.class';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,7 +15,7 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient, private storage: StorageService) {}
+  constructor(private http: HttpClient, private storage: StorageService, private ebs: EventBusService) {}
 
   isLoggedIn(){
     return this.storage.isLoggedIn()
@@ -25,6 +27,12 @@ export class AuthService {
       console.log("The user session has been deleted, forcing re-login")
     }
     return user
+  }
+
+  hotReload(profile: UserProfile): void {
+      this.storage.deleteUserProfile()
+      this.storage.saveItem(this.storage.USER_KEY, profile)
+      this.ebs.emit(new EventData('profile-updated', profile));
   }
 
   login(username: string, password: string): Observable<any> {

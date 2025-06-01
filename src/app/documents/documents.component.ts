@@ -7,6 +7,7 @@ import { UserProfile } from '../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { DocumentService } from '../_services/document.service';
+import { EventBusService } from '../_shared/event-bus.service';
 
 @Component({
   selector: 'app-documents',
@@ -60,16 +61,20 @@ export class DocumentsComponent implements OnInit {
   }
 
   constructor(
-    private userService: UserService,
     private authService: AuthService,
     private documentService: DocumentService,
     private route: ActivatedRoute,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private eventBusService: EventBusService
   ) { }
 
   ngOnInit(): void {
     this.user = this.authService.getLoggedInUser()
+
+    this.eventBusService.on('profile-updated', (profile: any) => {
+      this.user = profile;
+    });
 
     this.route.paramMap.subscribe(params => {
       const document_key = params.get('id');

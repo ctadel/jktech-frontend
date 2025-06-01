@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { UserProfile } from '../models/user.model';
 import { DocumentService } from '../_services/document.service';
+import { EventBusService } from '../_shared/event-bus.service';
 
 @Component({
   selector: 'app-home',
@@ -14,10 +15,17 @@ export class ExploreComponent implements OnInit {
   mostLikedDocs: any[] = [];
   user: UserProfile | null = null;
 
-  constructor(private docService: DocumentService, private authService: AuthService) { }
+  constructor(
+    private docService: DocumentService,
+    private authService: AuthService,
+    private eventBusService: EventBusService
+  ) { }
 
   ngOnInit(): void {
     this.user = this.authService.getLoggedInUser()
+    this.eventBusService.on('profile-updated', (profile: any) => {
+      this.user = profile;
+    });
     this.loadDocuments();
   }
 

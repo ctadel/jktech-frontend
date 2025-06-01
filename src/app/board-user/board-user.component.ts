@@ -5,6 +5,7 @@ import { AuthService } from '../_services/auth.service';
 import { UserService } from '../_services/user.service';
 import { PublicDocument, UserDocument, UserDocumentStats } from '../models/document.model';
 import { DocumentService } from '../_services/document.service';
+import { EventBusService } from '../_shared/event-bus.service';
 
 @Component({
   selector: 'app-chat',
@@ -53,11 +54,15 @@ export class BoardUserComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
+    private eventBusService: EventBusService,
   ) {}
 
   ngOnInit(): void {
-    this.loadConversations();
     this.user = this.authService.getLoggedInUser()
+    this.eventBusService.on('profile-updated', (profile: any) => {
+      this.user = profile;
+    });
+    this.loadConversations();
     this.loadUserDocumentsStatistics()
   }
 

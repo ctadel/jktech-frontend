@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { EventData } from '../_shared/event.class';
 import { EventBusService } from '../_shared/event-bus.service';
 import { StorageService } from '../_services/storage.service';
+import { UserProfile } from '../models/user.model';
 
 @Component({
   selector: 'app-profile',
@@ -23,6 +24,9 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authService.getLoggedInUser()
+    this.eventBusService.on('profile-updated', (profile: UserProfile) => {
+      this.user = profile;
+    });
   }
 
   resetData = {
@@ -36,13 +40,13 @@ export class ProfileComponent implements OnInit {
   };
 
   onUpdateProfile() {
-    this.userService.updateUserProfile(this.updateProfile.full_name, this.updateProfile.email)
+    let fullName = this.updateProfile.full_name || null
+    let email = this.updateProfile.email || null
+    this.userService.updateUserProfile(fullName, email)
         .subscribe({
         next: response => {
-          this.user.full_name = this.updateProfile.full_name
-          this.user.email = this.updateProfile.email
           this.userService.getUserProfile().subscribe(profile => {
-            this.eventBusService.emit(new EventData('profile-updated', profile));
+            this.authService.hotReload(profile)
           });
         },
         error: err => {
@@ -58,8 +62,7 @@ export class ProfileComponent implements OnInit {
             token => {
               this.storageService.saveItem(this.storageService.TOKEN_KEY, token);
               this.userService.getUserProfile().subscribe( profile => {
-                  this.storageService.saveItem(this.storageService.USER_KEY, profile);
-                  this.eventBusService.emit(new EventData('profile-updated', profile));
+                this.authService.hotReload(profile)
               })
           })
       })
@@ -73,12 +76,11 @@ export class ProfileComponent implements OnInit {
       targetProfile = 'BASIC'
     }
 
-
     this.userService.updateAccountType(targetProfile).subscribe({
         next: response => {
           this.user.account_type = targetProfile
           this.userService.getUserProfile().subscribe(profile => {
-            this.eventBusService.emit(new EventData('profile-updated', profile));
+            this.authService.hotReload(profile)
           });
         },
         error: err => {
@@ -97,5 +99,4 @@ export class ProfileComponent implements OnInit {
         }
       })
   }
-
 }
