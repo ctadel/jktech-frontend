@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 import { AuthService } from './_services/auth.service';
 import { EventBusService } from './_shared/event-bus.service';
 import { UserProfile } from './models/user.model';
+import { UserService } from './_services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -36,17 +38,24 @@ export class AppComponent {
 
   constructor(
     private authService: AuthService,
-    private eventBusService: EventBusService
+    private eventBusService: EventBusService,
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
-    this.user = this.authService.getLoggedInUser()
+    this.userService.getUserProfile().subscribe(profile => this.user = profile)
     this.showAdminBoard = (this.user && this.user.account_type == 'MODERATOR')
 
-    this.eventBusSub = this.eventBusService.on('logout', () => {
-      this.logout();
+    this.eventBusService.on('profile-updated', (profile: UserProfile) => {
+      this.user = profile;
+      this.showAdminBoard = profile.account_type === 'MODERATOR';
     });
+
+  }
+  ngOnDestroy(): void {
+    this.eventBusSub?.unsubscribe();
   }
 
   logout(): void {
@@ -54,6 +63,6 @@ export class AppComponent {
   }
 
   upgradeAccount(): void {
-    console.log("Not implemented")
+    this.router.navigate(['/profile'])
   }
 }

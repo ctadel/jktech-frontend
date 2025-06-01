@@ -35,31 +35,52 @@
     <ul
       class="flex flex-col overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
     >
-    <li
-      *ngFor="let convo of conversations"
-      (click)="selectConversation(convo)"
-      [class.bg-gray-300]="selectedConversation?.id === convo.id"
-      class="cursor-pointer p-3 flex justify-between items-center transition hover:bg-gray-200"
-    >
-      <div class="overflow-hidden">
-        <div class="font-semibold truncate max-w-[14rem]">
-          {{ convo.title }}
-        </div>
-        <small class="text-gray-600 flex items-center space-x-1">
-          <span *ngIf="convo.user_id === user.id" class="text-blue-600">👤</span>
-          <span>{{ convo.created_at | date: 'short' }}</span>
-        </small>
-      </div>
+      <li
+  *ngFor="let convo of conversations"
+  (click)="selectConversation(convo)"
+  [class.bg-gray-300]="selectedConversation?.id === convo.id"
+  class="cursor-pointer p-3 flex justify-between items-center transition hover:bg-gray-200 relative overflow-hidden"
+>
 
-      <button
-        type="button"
-        class="text-gray-400 hover:text-red-500 text-xl font-bold leading-none px-2 py-1 select-none"
-        title="Delete"
-        (click)="deleteConversation($event, convo.id)"
-      >
-        &times;
-      </button>
-    </li>
+  <!-- Subtle gray slanted stripe overlay -->
+  <div
+    *ngIf="!convo.document_id"
+    class="absolute inset-0 pointer-events-none z-0"
+    style="
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(128, 128, 128, 0.08),
+        rgba(128, 128, 128, 0.08) 12px,
+        transparent 12px,
+        transparent 24px
+      );
+    "
+  ></div>
+
+  <!-- Main content (z-10 above overlay) -->
+  <div class="overflow-hidden z-10 relative">
+    <div class="font-semibold truncate max-w-[14rem]">
+      {{ convo.title }}
+    </div>
+    <small class="text-gray-600 flex items-center space-x-1">
+      <span *ngIf="convo.document_owner_id === user.id" class="text-gray-500">
+        <i class="fas fa-user mr-1"></i>
+      </span>
+      <span>{{ convo.created_at | date: 'short' }}</span>
+    </small>
+  </div>
+
+  <button
+    type="button"
+    class="text-gray-400 hover:text-red-500 text-xl font-bold leading-none px-2 py-1 select-none z-10"
+    title="Delete"
+    (click)="deleteConversation($event, convo.id)"
+  >
+    &times;
+  </button>
+</li>
+
+
 
   </ul>
   </aside>
@@ -79,6 +100,13 @@
           </h5>
           <small class="text-gray-500">{{ selectedConversation.created_at | date: 'medium' }}</small>
         </div>
+
+        <a *ngIf="selectedConversation && selectedConversation.document_owner_id == user.id"
+           (click)="navigateToDocument(selectedConversation.document_id)"
+           class="text-gray-500 hover:text-blue-600 transition cursor-pointer"
+           title="Document Settings">
+          <i class="fas fa-cog text-lg"></i>
+        </a>
       </header>
 
       <!-- Messages -->
@@ -109,6 +137,12 @@
       <div *ngIf="loading" class="h-1 bg-blue-700 animate-pulse"></div>
 
       <!-- Input Form -->
+      <ng-container *ngIf="!selectedConversation.document_id; else deletedDocumentForm">
+        <h1 class="text-center text-gray-600 text-lg font-semibold mb-10">
+          This document has been deleted and is no longer available.
+        </h1>
+      </ng-container>
+      <ng-template #deletedDocumentForm>
       <form class="border-t border-gray-200 px-6 py-4 flex gap-3 items-center" (submit)="sendMessage()">
         <textarea
           (keydown.enter)="handleEnter($event)"
@@ -128,6 +162,7 @@
           Send
         </button>
       </form>
+      </ng-template>
 
     </ng-container>
 

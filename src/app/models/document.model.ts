@@ -5,7 +5,8 @@ export interface PublicDocument {
   version: number;
   uploaded_at: string;
   user_id: number;
-  stars: number;
+  total_stars: number;
+  user_starred: boolean;
   views: number;
   is_private_document: boolean;
 }

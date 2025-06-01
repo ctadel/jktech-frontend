@@ -1,136 +1,170 @@
-<div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card shadow-lg border-0 w-100" style="max-width: 900px;">
-    <div class="row g-0">
-      <!-- Login Form -->
-      <div class="col-md-6 p-4 border-end">
-        <h4 class="mb-4 text-center">Login</h4>
-        @if (!isLoggedIn) {
-        <form name="loginForm" (ngSubmit)="loginForm.valid && onLogin()" #loginForm="ngForm" novalidate>
-          <div class="mb-3">
-            <label class="form-label">Username</label>
-            <input
-              type="text"
-              class="form-control"
-              name="username"
-              [(ngModel)]="login.username"
-              required
-              #loginUsername="ngModel"
-              [ngClass]="{ 'is-invalid': loginForm.submitted && loginUsername.invalid }"
-            />
-            <div class="invalid-feedback">Username is required</div>
-          </div>
+<div class="flex items-center justify-center p-6"
+    style="height: calc(100vh - 64px)">
+  <div class="w-full max-w-6xl bg-white rounded-2xl shadow-xl grid grid-cols-1 md:grid-cols-2 overflow-hidden">
 
-          <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              name="password"
-              [(ngModel)]="login.password"
-              required
-              minlength="4"
-              #loginPassword="ngModel"
-              [ngClass]="{ 'is-invalid': loginForm.submitted && loginPassword.invalid }"
-            />
-            <div class="invalid-feedback">Password is required (min 4 characters)</div>
-          </div>
+    <!-- Login Section -->
+    <div class="p-10 border-b md:border-b-0 md:border-r border-gray-200 bg-white">
+      <h2 class="text-3xl font-bold text-indigo-700 mb-8 text-center">Welcome Back</h2>
 
-          <div class="d-grid">
-            <button class="btn btn-primary">Login</button>
-          </div>
+      <form
+        name="loginForm"
+        #loginForm="ngForm"
+        (ngSubmit)="loginForm.valid && onLogin()"
+        novalidate
+        *ngIf="!isLoggedIn"
+        class="space-y-5"
+      >
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="loginUsername">Username</label>
+          <input
+            id="loginUsername"
+            name="username"
+            type="text"
+            [(ngModel)]="login.username"
+            required
+            #loginUsername="ngModel"
+            class="w-full border px-4 py-2 rounded-md focus:outline-none transition focus:ring-2"
+            [ngClass]="{
+              'border-red-500 ring-red-500': loginForm.submitted && loginUsername.invalid,
+              'border-gray-300 ring-indigo-400': !(loginForm.submitted && loginUsername.invalid)
+            }"
+          />
+          <p *ngIf="loginForm.submitted && loginUsername.invalid" class="text-sm text-red-600 mt-1">Username is required.</p>
+        </div>
 
-          <div class="mt-3">
-            @if (loginForm.submitted && isLoginFailed) {
-              <div class="alert alert-danger" role="alert">
-                Login failed: {{ loginErrorMessage }}
-              </div>
-            }
-          </div>
-        </form>
-        } @else {
-          <div class="alert alert-success">Login successful</div>
-        }
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="loginPassword">Password</label>
+          <input
+            id="loginPassword"
+            name="password"
+            type="password"
+            [(ngModel)]="login.password"
+            required
+            minlength="4"
+            #loginPassword="ngModel"
+            class="w-full border px-4 py-2 rounded-md focus:outline-none transition focus:ring-2"
+            [ngClass]="{
+              'border-red-500 ring-red-500': loginForm.submitted && loginPassword.invalid,
+              'border-gray-300 ring-indigo-400': !(loginForm.submitted && loginPassword.invalid)
+            }"
+          />
+          <p *ngIf="loginForm.submitted && loginPassword.invalid" class="text-sm text-red-600 mt-1">Minimum 4 characters required.</p>
+        </div>
+
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md font-semibold shadow-sm transition">
+          Log In
+        </button>
+
+        <div *ngIf="loginForm.submitted && isLoginFailed" class="text-sm mt-4 p-3 bg-red-100 text-red-700 text-center rounded-md font-medium">
+          Login failed: {{ loginErrorMessage }}
+        </div>
+      </form>
+
+      <div *ngIf="isLoggedIn" class="text-center mt-4 p-4 bg-green-100 text-green-700 rounded-md font-semibold text-lg">
+        You're logged in!
       </div>
+    </div>
 
-      <!-- Register Form -->
-      <div class="col-md-6 p-4">
-        <h4 class="mb-4 text-center">Register</h4>
-        @if (!isSuccessful) {
-        <form name="registerForm" (ngSubmit)="registerForm.valid && onRegister()" #registerForm="ngForm" novalidate>
-          <div class="mb-3">
-            <label class="form-label">Username</label>
-            <input
-              type="text"
-              class="form-control"
-              name="username"
-              [(ngModel)]="register.username"
-              required
-              minlength="3"
-              maxlength="20"
-              #regUsername="ngModel"
-              [ngClass]="{ 'is-invalid': registerForm.submitted && regUsername.invalid }"
-            />
-            <div class="invalid-feedback">Username must be 3–20 characters</div>
-          </div>
+    <!-- Register Section -->
+    <div class="p-10 bg-gray-100">
+      <h2 class="text-3xl font-bold text-green-700 mb-8 text-center">Create an Account</h2>
 
-          <div class="mb-3">
-            <label class="form-label">Full Name</label>
-            <input
-              type="text"
-              class="form-control"
-              name="fullname"
-              [(ngModel)]="register.fullname"
-              required
-              minlength="3"
-              maxlength="80"
-              #regFullname="ngModel"
-              [ngClass]="{ 'is-invalid': registerForm.submitted && regFullname.invalid }"
-            />
-            <div class="invalid-feedback">Full name must be 3–80 characters</div>
-          </div>
+      <form
+        name="registerForm"
+        #registerForm="ngForm"
+        (ngSubmit)="registerForm.valid && onRegister()"
+        novalidate
+        *ngIf="!isSuccessful"
+        class="space-y-5"
+      >
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="regUsername">Username</label>
+          <input
+            id="regUsername"
+            name="username"
+            type="text"
+            [(ngModel)]="register.username"
+            required
+            minlength="3"
+            maxlength="20"
+            #regUsername="ngModel"
+            class="w-full border px-4 py-2 rounded-md focus:outline-none transition focus:ring-2"
+            [ngClass]="{
+              'border-red-500 ring-red-500': registerForm.submitted && regUsername.invalid,
+              'border-gray-300 ring-green-400': !(registerForm.submitted && regUsername.invalid)
+            }"
+          />
+          <p *ngIf="registerForm.submitted && regUsername.invalid" class="text-sm text-red-600 mt-1">3–20 characters required.</p>
+        </div>
 
-          <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              name="email"
-              [(ngModel)]="register.email"
-              required
-              #regEmail="ngModel"
-              [ngClass]="{ 'is-invalid': registerForm.submitted && regEmail.invalid }"
-            />
-            <div class="invalid-feedback">Enter a valid email</div>
-          </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="regFullname">Full Name</label>
+          <input
+            id="regFullname"
+            name="fullname"
+            type="text"
+            [(ngModel)]="register.fullname"
+            required
+            minlength="3"
+            maxlength="80"
+            #regFullname="ngModel"
+            class="w-full border px-4 py-2 rounded-md focus:outline-none transition focus:ring-2"
+            [ngClass]="{
+              'border-red-500 ring-red-500': registerForm.submitted && regFullname.invalid,
+              'border-gray-300 ring-green-400': !(registerForm.submitted && regFullname.invalid)
+            }"
+          />
+          <p *ngIf="registerForm.submitted && regFullname.invalid" class="text-sm text-red-600 mt-1">Full name is required.</p>
+        </div>
 
-          <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              name="password"
-              [(ngModel)]="register.password"
-              required
-              minlength="6"
-              #regPassword="ngModel"
-              [ngClass]="{ 'is-invalid': registerForm.submitted && regPassword.invalid }"
-            />
-            <div class="invalid-feedback">Password must be at least 6 characters</div>
-          </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="regEmail">Email</label>
+          <input
+            id="regEmail"
+            name="email"
+            type="email"
+            [(ngModel)]="register.email"
+            required
+            #regEmail="ngModel"
+            class="w-full border px-4 py-2 rounded-md focus:outline-none transition focus:ring-2"
+            [ngClass]="{
+              'border-red-500 ring-red-500': registerForm.submitted && regEmail.invalid,
+              'border-gray-300 ring-green-400': !(registerForm.submitted && regEmail.invalid)
+            }"
+          />
+          <p *ngIf="registerForm.submitted && regEmail.invalid" class="text-sm text-red-600 mt-1">Valid email is required.</p>
+        </div>
 
-          <div class="d-grid">
-            <button class="btn btn-success">Sign Up</button>
-          </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="regPassword">Password</label>
+          <input
+            id="regPassword"
+            name="password"
+            type="password"
+            [(ngModel)]="register.password"
+            required
+            minlength="6"
+            #regPassword="ngModel"
+            class="w-full border px-4 py-2 rounded-md focus:outline-none transition focus:ring-2"
+            [ngClass]="{
+              'border-red-500 ring-red-500': registerForm.submitted && regPassword.invalid,
+              'border-gray-300 ring-green-400': !(registerForm.submitted && regPassword.invalid)
+            }"
+          />
+          <p *ngIf="registerForm.submitted && regPassword.invalid" class="text-sm text-red-600 mt-1">Min 6 characters.</p>
+        </div>
 
-          <div class="mt-3">
-            @if (registerForm.submitted && isSignUpFailed) {
-              <div class="alert alert-warning">Signup failed! {{ registerErrorMessage }}</div>
-            }
-          </div>
-        </form>
-        } @else {
-          <div class="alert alert-success">Your registration was successful!<br>Please login to proceed</div>
-        }
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md font-semibold shadow-sm transition">
+          Register
+        </button>
+
+        <div *ngIf="registerForm.submitted && isSignUpFailed" class="text-sm mt-4 p-3 bg-yellow-100 text-yellow-800 text-center rounded-md font-medium">
+          Signup failed! {{ registerErrorMessage }}
+        </div>
+      </form>
+
+      <div *ngIf="isSuccessful" class="text-center mt-4 p-4 bg-green-100 text-green-800 rounded-md font-semibold text-lg">
+        Registration successful!<br><span class="text-gray-400 text-sm">Please log-in to continue</span>
       </div>
     </div>
   </div>

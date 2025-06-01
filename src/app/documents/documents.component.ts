@@ -91,16 +91,19 @@ export class DocumentsComponent implements OnInit {
   }
 
   loadDocument(document_key: string): void {
-    this.userService.fetchUserDocumentByKey(document_key).subscribe({
-      next: data => this.document_data = data,
+    this.documentService.fetchUserDocumentByKey(document_key).subscribe({
+      next: data => {
+        this.document_data = data
+      },
       error: err => {
+        this.viewMode = '404'
         console.error('Failed to load user documents', err)
       }
     });
   }
 
   loadUserDocuments(): void {
-    this.userService.fetchUserDocuments().subscribe({
+    this.documentService.fetchUserDocuments().subscribe({
       next: data => this.userDocuments = data,
       error: err => {
         console.error('Failed to load user documents', err)
@@ -109,7 +112,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   loadUserDocumentsStatistics(): void {
-    this.userService.fetchUserDocumentsStats().subscribe({
+    this.documentService.fetchUserDocumentsStats().subscribe({
       next: data => this.userDocumentStats = data,
       error: err => {
         console.error('Failed to load user documents', err)
@@ -152,4 +155,33 @@ export class DocumentsComponent implements OnInit {
       }
     });
   }
+
+
+  toggleStar(document: any) {
+    if (document.user_starred) {
+      this.documentService.unStarDocument(document.id).subscribe({
+        next: () => {
+          document.user_starred = false;
+          if (document.total_stars !== undefined && document.total_stars > 0) {
+            document.total_stars -= 1;
+          }
+        },
+        error: err => console.error('Failed to unstar document', err)
+      });
+    } else {
+      this.documentService.starDocument(document.id).subscribe({
+        next: () => {
+          document.user_starred = true;
+          if (document.total_stars !== undefined) {
+            document.total_stars += 1;
+          } else {
+            document.total_stars = 1;
+          }
+        },
+        error: err => console.error('Failed to star document', err)
+      });
+    }
+  }
+
+
 }

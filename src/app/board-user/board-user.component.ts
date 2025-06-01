@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConversationService } from '../_services/conversation.service';
 import { AuthService } from '../_services/auth.service';
 import { UserService } from '../_services/user.service';
-import { UserProfile } from '../models/user.model';
 import { PublicDocument, UserDocument, UserDocumentStats } from '../models/document.model';
 import { DocumentService } from '../_services/document.service';
 
@@ -54,7 +53,6 @@ export class BoardUserComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +62,7 @@ export class BoardUserComponent implements OnInit {
   }
 
   loadUserDocumentsStatistics(): void {
-    this.userService.fetchUserDocumentsStats().subscribe({
+    this.documentService.fetchUserDocumentsStats().subscribe({
       next: data => this.userDocumentStats = data,
       error: err => console.error('Failed to load user documents', err)
     });
@@ -178,14 +176,14 @@ export class BoardUserComponent implements OnInit {
     });
   }
 
-handleEnter(event: Event): void {
-  const keyboardEvent = event as KeyboardEvent;
+  handleEnter(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
 
-  if (keyboardEvent.key === 'Enter' && !keyboardEvent.shiftKey) {
-    keyboardEvent.preventDefault();
-    this.sendMessage();
+    if (keyboardEvent.key === 'Enter' && !keyboardEvent.shiftKey) {
+      keyboardEvent.preventDefault();
+      this.sendMessage();
+    }
   }
-}
 
   dropFile(event: DragEvent): void {
     event.preventDefault();
@@ -196,5 +194,21 @@ handleEnter(event: Event): void {
 
   allowDrop(event: DragEvent): void {
     event.preventDefault();
+  }
+
+  navigateToDocument(document_id: number) {
+    this.documentService.fetchUserDocuments().subscribe({
+      next: (documents) => {
+        const matchedDoc = documents.find(doc => doc.id === document_id);
+        if (matchedDoc) {
+          this.router.navigate(['/document', matchedDoc.document_key]);
+        } else {
+          console.warn('Document not found with id:', document_id);
+        }
+      },
+      error: err => {
+        console.error('Failed to load user documents', err);
+      }
+    })
   }
 }

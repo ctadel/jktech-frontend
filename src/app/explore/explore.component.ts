@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../_services/user.service';
 import { AuthService } from '../_services/auth.service';
+import { UserProfile } from '../models/user.model';
+import { DocumentService } from '../_services/document.service';
 
 @Component({
   selector: 'app-home',
@@ -11,27 +12,33 @@ export class ExploreComponent implements OnInit {
   latestDocs: any[] = [];
   trendingDocs: any[] = [];
   mostLikedDocs: any[] = [];
-  user: any = {}
+  user: UserProfile | null = null;
 
-  constructor(private userService: UserService, private authService: AuthService) { }
+  constructor(private docService: DocumentService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.loadDocuments();
     this.user = this.authService.getLoggedInUser()
+    this.loadDocuments();
   }
 
   loadDocuments(): void {
-    this.userService.fetchLatestDocuments().subscribe({
+
+    let user = 0
+    if (this.user){
+      user = this.user.id
+    }
+
+    this.docService.fetchLatestDocuments(user).subscribe({
       next: data => this.latestDocs = data.slice(0, 8),
       error: err => console.error('Failed to load latest docs', err)
     });
 
-    this.userService.fetchTrendingDocuments().subscribe({
+    this.docService.fetchTrendingDocuments(user).subscribe({
       next: data => this.trendingDocs = data.slice(0, 4),
       error: err => console.error('Failed to load trending docs', err)
     });
 
-    this.userService.fetchExplore().subscribe({
+    this.docService.fetchExplore(user).subscribe({
       next: data => this.mostLikedDocs = data.slice(0, 8),
       error: err => console.error('Failed to load most liked docs', err)
     });

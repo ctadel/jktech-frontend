@@ -34,6 +34,10 @@ export class StorageService {
     return false;
   }
 
+  public deleteUserProfile(): void {
+    window.sessionStorage.removeItem(this.USER_KEY);
+  }
+
   public getLoggedInUser(): UserProfile | null {
     const userStr = window.sessionStorage.getItem(this.USER_KEY);
     if (userStr) {

@@ -1,7 +1,6 @@
-<div class="mt-10"></div>
-
 <!-- Documents list view -->
 <div *ngIf="viewMode === 'list'">
+  <div class="mt-10"></div>
   <app-document-stats [stats]="userDocumentStats" [user]="user" />
   <div class="flex items-center justify-between mt-8">
     <h1 class="text-2xl font-bold text-gray-800">My Ingested Documents</h1>
@@ -17,7 +16,7 @@
   <app-document-card-list [documents]="userDocuments" [user]="user" />
 </div>
 
-<div *ngIf="viewMode === 'detail'" class="mb-4">
+<div *ngIf="viewMode === 'detail'">
   <div class="p-6">
     <!-- Back Button -->
     <button
@@ -26,46 +25,62 @@
       <i class="fas fa-arrow-left mr-1"></i> Back
     </button>
 
-    <!-- Document Details Card -->
-    <div class="relative bg-white shadow-md rounded-xl p-6 mb-6 border border-gray-200">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">{{ document_data && document_data.title }}
-        <span
-         *ngIf="document_data"
+<div *ngIf="document_data"
+      class="relative bg-white shadow-md rounded-xl p-6 mb-6 border border-gray-200">
+
+  <i *ngIf="document_data?.user_starred"
+     class="fas fa-star text-yellow-400 text-6xl opacity-30 absolute top-3 right-3 transform rotate-12 pointer-events-none">
+  </i>
+
+  <h2 class="text-xl font-bold text-gray-800 mb-4">
+    {{ document_data.title }}
+    <span *ngIf="document_data"
           [ngClass]="{
             'bg-yellow-100 text-yellow-800': document_data.ingestion_status === 'PENDING',
             'bg-blue-100 text-blue-800': document_data.ingestion_status === 'IN_PROGRESS',
             'bg-green-100 text-green-800': document_data.ingestion_status === 'COMPLETED',
             'bg-red-100 text-red-800': document_data.ingestion_status === 'FAILED' || document_data.ingestion_status === 'TERMINATED'
           }"
-          class="px-3 py-1 rounded-full text-sm font-medium"
-        >
-          {{ document_data.ingestion_status }}
-        </span>
-      </h2>
+          class="px-3 py-1 rounded-full text-sm font-medium">
+      {{ document_data.ingestion_status }}
+    </span>
+  </h2>
 
+  <!-- Info grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
+    <p><strong>ID:</strong> {{ document_data.id }}</p>
+    <p><strong>Version:</strong> {{ document_data.version }}</p>
+    <p><strong>Uploaded:</strong> {{ document_data.uploaded_at | date: 'medium' }}</p>
+    <p><strong>Private:</strong> {{ document_data.is_private_document ? 'Yes' : 'No' }}</p>
+    <p><strong>Stars:</strong> {{ document_data.total_stars }}</p>
+    <p><strong>Views:</strong> {{ document_data.views }}</p>
+    <p><strong>File Path:</strong> {{ document_data.file_path }}</p>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
-        <p><strong>ID:</strong> {{ document_data && document_data.id }}</p>
-        <p><strong>Version:</strong> {{ document_data && document_data.version }}</p>
-        <p><strong>Uploaded:</strong> {{ document_data && document_data.uploaded_at | date: 'medium' }}</p>
-        <p><strong>Private:</strong> {{ document_data && document_data.is_private_document ? 'Yes' : 'No' }}</p>
-        <p><strong>Stars:</strong> {{ document_data && document_data.stars }}</p>
-        <p><strong>Views:</strong> {{ document_data && document_data.views }}</p>
-        <p><strong>File Path:</strong> {{ document_data && document_data.file_path }}</p>
-      </div>
+    <div class="mt-6 flex gap-3">
+      <div class="absolute bottom-4 right-4 flex gap-2">
+        <button
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow-sm text-sm flex items-center">
+          <i class="fas fa-comments mr-1"></i> Chat
+        </button>
 
-      <!-- Action Buttons -->
-
-      <div *ngIf="document_data" class="mt-6 flex gap-3">
+        <button
+          (click)="toggleStar(document_data)"
+          class="bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 text-yellow-700 px-4 py-2 rounded shadow-sm text-sm flex items-center">
+          <i [ngClass]="document_data.user_starred ? 'fas fa-star' : 'far fa-star'"></i>
+          <span class="ml-2">
+            {{ document_data.user_starred ? 'Star' : 'Star' }}
+          </span>
+        </button>
 
         <button
           (click)="deleteDocument(document_data.document_key)"
-          class="absolute bottom-4 right-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow-sm text-sm"
-        >
+          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow-sm text-sm flex items-center">
           <i class="fas fa-trash mr-1"></i> Delete
         </button>
       </div>
     </div>
+  </div>
+</div>
 
     <!-- Reupload Form -->
 
@@ -192,5 +207,25 @@
       </form>
     </div>
     </ng-template>
+  </div>
+</div>
+
+<div *ngIf="viewMode === '404'"
+  style="height: calc(100vh - 64px)"
+  class="flex flex-col items-center justify-center bg-gray-50 text-center">
+  <div class="max-w-xl">
+    <h1 class="text-9xl font-extrabold text-indigo-600">404</h1>
+    <h2 class="text-3xl md:text-4xl font-semibold text-gray-800 mt-4">Document Not Found</h2>
+    <p class="text-lg text-gray-600 mt-4">
+      The document you're looking for was probably <span class="text-red-500 font-medium">deleted</span> or
+      <span class="text-yellow-500 font-medium">archived</span> by its owner.
+    </p>
+
+    <button
+      (click)="goBack()"
+      class="mt-8 inline-flex items-center px-6 py-3 bg-indigo-600 text-white text-lg font-medium rounded-lg shadow hover:bg-indigo-700 transition"
+    >
+      ← Go Back
+    </button>
   </div>
 </div>

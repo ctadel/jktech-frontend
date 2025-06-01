@@ -1,25 +1,46 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, window } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import { UserProfile } from '../models/user.model';
 import { PublicDocument, UserDocument, UserDocumentStats } from '../models/document.model';
 import { BASE_URL } from './api.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private storageService: StorageService,
+    private router: Router
+  ) {}
 
   _get_header() {
-    const storage = new StorageService()
-    let token = storage.getItem(storage.TOKEN_KEY).access_token
+    let token = this.storageService.getItem(this.storageService.TOKEN_KEY).access_token
     const header = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
     return header
   }
+
+  hotReload(): void {
+    this.getUserProfile().subscribe({
+      next: user => {
+        this.storageService.deleteUserProfile()
+        this.storageService.saveItem(this.storageService.USER_KEY, user);
+        const currentUrl = this.router.url;
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate([currentUrl]);
+        });
+      },
+      error: err => {
+        console.error('Failed to fetch user profile:', err);
+      }
+    });
+  }
+
 
   getUserProfile(): Observable<UserProfile> {
     const headers = this._get_header();
@@ -29,43 +50,38 @@ export class UserService {
     })
   }
 
-  // based on top views
-  fetchExplore(): Observable<PublicDocument[]> {
-    return this.http.get<PublicDocument[]>(BASE_URL + '/documents/public/explore', { responseType: 'json' });
+  updateUserPassword(oldPassword: string | null, newPassword: string | null): Observable<any>{
+    return this.http.patch(BASE_URL + '/users/profile/account/update-password', {
+      old_password: oldPassword,
+      new_password: newPassword
+      }, {
+        headers: this._get_header(),
+      })
+    }
+
+  updateAccountType(accountType: string | null): Observable<any>{
+    return this.http.post(BASE_URL + '/users/profile/account/update-account-type', {
+      account_type: accountType
+      }, {
+        headers: this._get_header(),
+      })
+    }
+
+  updateUserProfile(full_name: string | null, email: string | null): Observable<any>{
+    return this.http.patch(BASE_URL + '/users/profile/update', {
+      full_name: full_name,
+      email: email
+      }, {
+        headers: this._get_header(),
+      })
+    }
+
+  deleteAccount(): Observable<any> {
+    const headers = this._get_header();
+    return this.http.delete(BASE_URL + '/users/profile/account/deactivate', {
+      headers: headers,
+    })
   }
 
-  // based on upload date
-  fetchLatestDocuments(): Observable<PublicDocument[]> {
-    return this.http.get<PublicDocument[]>(BASE_URL + '/documents/public/explore/latest', { responseType: 'json' });
-  }
-
-  // based on top stars
-  fetchTrendingDocuments(): Observable<PublicDocument[]> {
-    return this.http.get<PublicDocument[]>(BASE_URL + '/documents/public/explore/trending', { responseType: 'json' });
-  }
-
-  fetchUserDocuments(): Observable<UserDocument[]> {
-    const headers = this._get_header()
-    return this.http.get<UserDocument[]>(BASE_URL + `/documents`, {
-      responseType: 'json',
-      headers: headers
-    });
-  }
-
-  fetchUserDocumentByKey(document_key: string): Observable<UserDocument> {
-    const headers = this._get_header()
-    return this.http.get<UserDocument>(BASE_URL + `/documents/${document_key}`, {
-      responseType: 'json',
-      headers: headers
-    });
-  }
-
-  fetchUserDocumentsStats(): Observable<UserDocumentStats> {
-    const headers = this._get_header()
-    return this.http.get<UserDocumentStats>(BASE_URL + `/documents/stats`, {
-      responseType: 'json',
-      headers: headers
-    });
-  }
 
 }
