@@ -43,4 +43,5 @@ import { TOAST_CONFIG } from './_shared/common';
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
