@@ -3,6 +3,7 @@ import { AuthService } from '../_services/auth.service';
 import { UserService } from '../_services/user.service';
 import { StorageService } from '../_services/storage.service';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -34,8 +35,18 @@ export class AuthComponent {
     private authService: AuthService,
     private userService: UserService,
     private storageService: StorageService,
+    private route: ActivatedRoute,
     private toastr: ToastrService,
   ) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['sessionExpired'] === 'true') {
+        this.toastr.warning('Session expired, please log in again.', 'Session Timeout');
+      }
+    });
+  }
+
 
   onLogin(): void {
     const { username, password } = this.login;
