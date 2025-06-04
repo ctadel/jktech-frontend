@@ -1,9 +1,9 @@
-# ctadel-library (Frontend)
+# ctadel-web-library (Frontend)
 
-This is the frontend for the **Ctadel Library** project – an AI-powered document ingestion and querying platform. It integrates with the FastAPI backend and offers an interactive, user-friendly interface built in Angular.
+This is the frontend for the [**ctadel Web Library**](https://github.com/ctadel/ctadel-web-library) project – an AI-powered document ingestion and querying platform. It integrates with the FastAPI backend and offers an interactive, user-friendly interface built in Angular.
 
 ## 🌐 Live Backend API
-- Backend GitHub: [ctadel-library-backend](https://github.com/ctadel/jktech-backend)
+- Backend Repository: [ctadel/wlib-backend](https://github.com/ctadel/wlib-backend)
 - Swagger Docs: `/docs` (hosted on backend)
 
 ---
@@ -101,7 +101,7 @@ docker run -d -p 4200:80 ctadel-frontend
 
 - **GitHub Actions / GitLab CI**:
   - Linting and testing on PRs
-  - Auto-build and deploy on push to `main`
+  - Auto-build and deploy on push to `master`
   - Version tagging for releases
 
 - **Dockerized Pipeline**:
